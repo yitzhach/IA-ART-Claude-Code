@@ -227,7 +227,13 @@ const jsonLd = {
     min-height: min(80vh, 52rem);
   }
   .plate-zoom {
-    display: contents;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
     cursor: zoom-in;
   }
   .plate :global(img) {

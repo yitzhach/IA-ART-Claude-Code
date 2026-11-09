@@ -1,6 +1,6 @@
 # Cloudflare static asset headers.
 
-# Fingerprinted build output (CSS, JS, images) never changes — cache for a year.
+# Fingerprinted build output (CSS, JS, images, fonts) never changes — cache for a year.
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
@@ -8,3 +8,5 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(self), microphone=(), geolocation=()
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://formspree.io https://cloudflareinsights.com; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'self'; object-src 'none'
