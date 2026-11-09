@@ -43,6 +43,7 @@ const available = works.filter((w) => w.data.status === 'available').length;
       <p class="result mono" aria-live="polite" data-result></p>
     </form>
 
+    <h2 class="visually-hidden">All works</h2>
     <WorkGrid works={works} eager={4} />
     <p class="empty" data-empty hidden>
       Nothing matches yet. <a class="link" href="/inquire/">Ask the studio</a> — new work isn’t always online.

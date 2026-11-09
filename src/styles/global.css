@@ -109,6 +109,7 @@ h1, h2, h3 { font-weight: 400; line-height: 1.1; text-wrap: balance; }
 .prose { color: var(--ink-2); max-width: var(--measure); }
 .prose > * + * { margin-top: 1em; }
 .section--dark .lede, .section--dark .prose { color: var(--on-dark-muted); }
+.section--dark .eyebrow { color: #e08a5f; } /* rust is too dark on ink; this passes WCAG AA */
 
 /* ---------- Buttons ---------- */
 .btn {
