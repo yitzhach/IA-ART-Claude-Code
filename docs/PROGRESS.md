@@ -57,6 +57,13 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
 - **Tests in the repo**: `npm test` (26 Playwright checks, desktop + phone, ~12 s). **CLAUDE.md** working notes.
 - Content checklist now includes reviewing the assistant's answers and choosing featured works.
 
+### 2026-11-09 02:00–02:05 ET — session 2 (continued)
+- **Security headers**: strict Content-Security-Policy + X-Frame-Options; all scripts/styles are files. Every page and
+  feature exercised under the policy in workerd — zero violations.
+- Fixed: close-up button wasn't keyboard-focusable; header overflowed on 320px phones once the list had items
+  (new regression test — 28 tests now).
+- Checked layouts at iPad portrait/landscape, landscape phone, 1280×720 and 1920×1080 — no overflow.
+
 ## Morning summary for Isaac
 
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched
