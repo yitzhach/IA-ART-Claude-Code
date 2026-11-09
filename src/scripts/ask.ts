@@ -20,6 +20,7 @@ interface Work {
   width: number | null;
   height: number | null;
   size: string;
+  look: string | null;
 }
 interface Knowledge {
   faq: Faq[];
@@ -135,15 +136,38 @@ export async function init(dialog: HTMLDialogElement) {
     return bestScore >= 2 ? best : null;
   };
 
-  /** Works matching collection / availability / size words in a question. */
+  /** Colours, materials and motifs a visitor might ask for — matched against each work's description. */
+  const LOOKS: Record<string, string[]> = {
+    white: ['white', 'cream', 'bone', 'chalk', 'pale'],
+    grey: ['grey', 'gray', 'slate', 'stone'],
+    black: ['black', 'charcoal', 'dark'],
+    blue: ['blue', 'navy', 'turquoise'],
+    green: ['green', 'sage', 'moss'],
+    gold: ['gold', 'brass', 'amber', 'gilding'],
+    warm: ['warm', 'rust', 'ochre', 'peach', 'terracotta', 'rose', 'tan', 'sand', 'amber'],
+    red: ['red', 'rust', 'terracotta'],
+    tree: ['tree', 'acacia'],
+    figure: ['figure', 'face', 'head', 'silhouette'],
+    horizon: ['horizon', 'sky', 'landscape'],
+    door: ['doorway', 'door', 'lintel'],
+    sculpture: ['sculpture', 'cast head'],
+  };
+  const lookWords = (t: string) =>
+    Object.entries(LOOKS)
+      .filter(([k, syn]) => [k, ...syn].some((w) => new RegExp(`\\b${w}`).test(t)))
+      .map(([, syn]) => syn);
+
+  /** Works matching collection / availability / size / look words in a question. */
   const findWorks = (q: string): Work[] | null => {
     const t = q.toLowerCase();
     const coll = ['abstract', 'figurative', 'sculptural'].filter((c) => t.includes(c) || t.includes(c.slice(0, -2)));
     const wantAvailable = /\b(available|for sale|buy|purchase|in stock)\b/.test(t);
     const wantLarge = /\b(large|big|huge|statement|oversized)\b/.test(t);
     const wantSmall = /\b(small|little|compact)\b/.test(t);
-    if (!coll.length && !wantAvailable && !wantLarge && !wantSmall) return null;
+    const looks = lookWords(t);
+    if (!coll.length && !wantAvailable && !wantLarge && !wantSmall && !looks.length) return null;
     let list = kb.works.filter((w) => !coll.length || coll.some((c) => w.collections.includes(c)));
+    for (const syn of looks) list = list.filter((w) => syn.some((s) => (w.look ?? '').toLowerCase().includes(s)));
     if (wantAvailable) list = list.filter((w) => w.status === 'available');
     const area = (w: Work) => (w.width ?? 0) * (w.height ?? 0);
     if (wantLarge) list = list.filter((w) => area(w) >= 48 * 48).sort((a, b) => area(b) - area(a));
@@ -177,12 +201,11 @@ export async function init(dialog: HTMLDialogElement) {
     // 1 · Instant answer from the FAQ (plus matching works when the question is about finding a piece).
     const hit = matchFaq(q);
     const found = findWorks(q);
-    if (hit && (!found || hit.id === 'available')) {
+    if (hit) {
       const msg = say('bot', hit.a);
-      if (hit.id === 'available') {
-        const avail = kb.works.filter((w) => w.status === 'available');
-        if (avail.length) msg.append(workCards(avail));
-      }
+      // Show works too when the question also names what they're looking for ("price of a large white piece").
+      const works = hit.id === 'available' ? (found ?? kb.works).filter((w) => w.status === 'available') : (found ?? []);
+      if (works.length) msg.append(workCards(works));
       if (hit.id === 'wall' && hasWallView) {
         msg.append(links([{ label: 'View this piece on your wall', href: '#wall-view' }]));
       } else if (hit.links?.length) {

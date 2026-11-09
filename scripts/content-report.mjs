@@ -69,6 +69,12 @@ Fill in what you know; anything left blank is simply not shown on the site (no p
       trade, materials). Read it once — Ask AI repeats it to visitors. Add anything you'd like it to know (care,
       payment, shipping costs, show dates).
 - [ ] **Featured works:** add \`featured: true\` to up to 8 works to choose what the home page shows.
+- [ ] **Descriptions:** each work's \`alt:\` line (what it looks like — palette, composition, surface) was written by
+      Claude from the photos. It's read aloud to blind visitors, helps Google Images, and lets Ask AI find "something
+      blue" or "a piece with a tree". Correct any that are off.
+- [ ] **Possibly the same piece:** \`untitled-abstract-04\` and \`untitled-sculptural-09\` both show a grey panel with a
+      small inset photo of a lone tree — one photo framed, one not. Same work? (\`untitled-abstract-06\` turned out to be
+      Green Horizon and has been merged into it.)
 - [ ] **Shows & fairs:** upcoming show dates would help art-fair visitors find you again.
 - [ ] **Unused photos:** \`src/assets/site/hero-macro-2/3/6.webp\` look like finished works not in the catalogue — are they?
 

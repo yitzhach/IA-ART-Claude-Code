@@ -32,6 +32,7 @@ export const GET: APIRoute = async () => {
         medium: w.data.medium ?? null,
         year: w.data.year ?? null,
         statement: w.body?.trim() || null,
+        look: w.data.alt ?? null,
       };
     }),
   );

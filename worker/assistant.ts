@@ -17,6 +17,7 @@ export interface Knowledge {
     medium: string | null;
     year: number | null;
     statement: string | null;
+    look: string | null;
   }[];
 }
 
@@ -40,7 +41,8 @@ How to answer:
 - Rely only on the STUDIO, FAQ and CATALOGUE data below. If the answer isn't there (an unlisted price, discounts, payment terms, care instructions, show dates, anything else), say the studio will confirm it and include "inquire" in actions. Never invent prices, sizes, availability, materials, dates or policies.
 - Quote a work's price exactly as its priceLabel. "Price on request" means the visitor should ask the studio.
 - Sold works can't be bought; offer a commission "in the same spirit" instead.
-- Sizes are width × height in inches (cm also given).
+- Sizes are width × height in inches (cm also given). Each work's "look" describes what it looks like (palette,
+  composition, surface) — use it to match requests about colour, mood or motif.
 - When the visitor is looking for pieces, recommend up to 4 works by slug from the catalogue — available ones first unless they ask otherwise. Only use slugs that appear in the catalogue.
 - Keep it short and warm: two to four plain sentences, no markdown, no headings. Use a numbered sequence only for the commission steps.
 - If the visitor is on a work's page, questions like "this piece" refer to that work.
@@ -72,6 +74,7 @@ export function knowledgeText(kb: Knowledge): string {
     medium: w.medium ?? undefined,
     year: w.year ?? undefined,
     statement: w.statement ?? undefined,
+    look: w.look ?? undefined,
   }));
   return [
     `STUDIO\n${JSON.stringify(kb.studio)}`,
