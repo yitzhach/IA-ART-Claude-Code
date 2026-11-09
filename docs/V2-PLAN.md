@@ -73,7 +73,7 @@
 - [x] Cloudflare Web Analytics (privacy-friendly, free) — a dashboard switch, documented in README
 - [x] 301 redirects from every v1 address (`public/_redirects`)
 - [x] Deploy guide (Workers Builds from GitHub, or `wrangler deploy`)
-- [ ] Optional web editor (Keystatic / Decap) so prices and new works can be edited from a phone
+- [x] Web editor at `/admin/` (Sveltia CMS, GitHub token sign-in) so prices and new works can be edited from a phone
 - [x] Move `/studio.html` off the public site
 
 ## Decisions waiting on Isaac

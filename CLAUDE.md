@@ -35,6 +35,8 @@ Run `npm run check && npm test` before every commit that changes code.
 - Keep it accessible: one `<h1>` per page, alt text on every image, 44px tap targets, reduced motion respected,
   axe-core clean.
 - Images: put originals in the work folder; Astro makes the web sizes. Don't commit near-duplicate files.
+- The web editor (`public/admin/`, Sveltia CMS) mirrors the schema in `src/content.config.ts`. When you add or
+  rename a work field, update `public/admin/config.yml` too — editors drop unknown fields on save (a test checks this).
 - `public/_headers` sends a strict Content-Security-Policy (self + Formspree + Cloudflare Web Analytics). Adding any
   third-party script, style, font, image or API means updating it — test under `npm run dev:worker`, which applies
   the headers (`npm test` uses `astro preview`, which doesn't). Astro is set never to inline CSS/JS for this reason.

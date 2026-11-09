@@ -47,7 +47,23 @@ A sentence or two about the piece. Optional — shown on the work's page.
 
 Not sure what a work is missing? `npm run content:report` writes a checklist to `docs/CONTENT-NEEDED.md`.
 
-You can make all of these edits on github.com (open the file → pencil icon → commit), or ask Claude.
+### The web editor (phone or computer)
+
+**isaacandersonart.com/admin/** is a visual editor for the catalogue: change prices and status, upload photos,
+add new works, reorder. Each save is committed to GitHub and the site rebuilds itself (once Cloudflare builds
+are connected — see Deploying, step 3).
+
+One-time setup (about two minutes):
+
+1. On github.com: your photo → **Settings → Developer settings → Personal access tokens → Fine-grained tokens →
+   Generate new token**. Repository access: *Only select repositories* → `IA-ART-Claude-Code`. Permissions:
+   **Contents → Read and write**. Choose an expiry (up to a year) and copy the token.
+2. Open `/admin/` on the site, choose **Sign In Using Access Token**, and paste it. Your browser remembers it.
+
+The editor currently saves to the `v2` branch; change `branch:` in `public/admin/config.yml` to `main` once V2 is
+merged and live. (A "Sign In with GitHub" button also works after a small OAuth setup — see sveltiacms.app.)
+
+You can also make any edit on github.com (open the file → pencil icon → commit), or ask Claude.
 
 ---
 

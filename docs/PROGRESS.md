@@ -80,6 +80,12 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   and rejected (larger than WebP on these textured surfaces, 20× slower to build).
 - Works whose status Isaac hasn't confirmed now say "Availability on request" instead of implying they're for sale.
 
+### 2026-11-09 02:20–02:26 ET — session 2 (continued)
+- **Web editor** at `/admin/` (Sveltia CMS 0.252.0, pinned): edit prices, status, photos, order and add works from a
+  phone; saves commit to GitHub. Sign-in with a fine-grained GitHub token (README › The web editor). Booted under its
+  own CSP in workerd with zero violations; a test keeps its fields in step with the catalogue schema.
+- Fair page shows three show photos; removed unused code/images.
+
 ## Morning summary for Isaac
 
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched
@@ -95,6 +101,9 @@ of what's needed from you.
 **What only you can supply** — `docs/CONTENT-NEEDED.md` lists it: titles, sizes and years for most works,
 prices (or keep "Price on request"), the About-page biography and exhibitions, approval of two drafted collection
 descriptions, and the FAQ answers in `src/lib/faq.ts`.
+
+**Edit it yourself.** Once deployed, `/admin/` is a visual editor for prices, status, photos and new works —
+setup is one GitHub token (README › The web editor).
 
 **Decisions waiting on you** — `docs/V2-PLAN.md` › Decisions: show prices?; "Buy now" via Stripe?; AI on
 (add an Anthropic API key) and which model; public email address.
