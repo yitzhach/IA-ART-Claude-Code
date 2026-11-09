@@ -1,6 +1,6 @@
 # isaacandersonart.com — working notes for Claude
 
-Isaac Anderson's portfolio and sales site (sculptural art in cement, plaster and steel). Astro 5 static
+Isaac Anderson's portfolio and sales site (sculptural art in cement, plaster and steel). Astro 7 static
 site + one Cloudflare Worker for the Ask AI endpoint. Isaac is not a developer: explain changes in plain
 language and keep everyday edits (prices, new works) possible without code. README.md has the full tour.
 
@@ -17,7 +17,9 @@ npm run content:report  # regenerate docs/CONTENT-NEEDED.md after touching works
 npm run dev:worker      # site + Worker in workerd (Ask AI needs --var ANTHROPIC_API_KEY:…)
 ```
 
-Run `npm run check && npm test` before every commit that changes code. `tests/worker.spec.ts` unit-tests the Ask AI
+Run `npm run check && npm test` before every commit that changes code. Node 22.23.4+ (Astro 7). When an AI agent
+runs `astro preview`/`astro dev`, Astro 7 backgrounds the server and returns at once; the Playwright config passes
+`--ignore-lock` to keep it in the foreground, and `npx astro preview stop` ends a stray one. `tests/worker.spec.ts` unit-tests the Ask AI
 Worker with a fake Claude client (no key or network needed); `tests/build.spec.ts` scans the build for anything the
 CSP would block (inline scripts/styles), duplicate view-transition names, and broken internal links.
 
@@ -48,5 +50,11 @@ CSP would block (inline scripts/styles), duplicate view-transition names, and br
   third-party script, style, font, image or API means updating it — test under `npm run dev:worker`, which applies
   the headers (`npm test` uses `astro preview`, which doesn't). Astro is set never to inline CSS/JS for this reason.
 - Ask AI defaults to `claude-opus-5-5` (`wrangler.jsonc → vars`); the API key is a Worker secret, never in the repo.
-- Never deploy, change DNS, or move the custom domain without Isaac's go-ahead. Work on a branch; `main` is
-  the live v1 site until Isaac merges V2.
+- CSS minifier (Vite 8 / Lightning CSS) keeps only the **last** of a prefixed/standard pair: write
+  `-webkit-foo` first, then `foo`. A `backdrop-filter` makes an element the containing block for fixed children
+  (it trapped the phone menu once) — never put fixed content inside a blurred element without a test.
+- **Preview:** pushing to `v2` deploys https://isaacandersonart-v2.bobdylan2000.workers.dev by itself (Workers
+  Builds trigger "Preview from v2"). Check a build with the Cloudflare connector: builds API for Worker id
+  `8c6c19ad15514dd1abba2a4b3e59013c`. Browse the preview from the sandbox to verify fixes on the real host.
+- Never deploy to the live domain, change DNS or zone settings, or move the custom domain without Isaac's
+  go-ahead. Work on `v2`; `main` is the live v1 site until Isaac merges V2.

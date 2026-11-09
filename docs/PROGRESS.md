@@ -1,34 +1,30 @@
 # Progress log
 
 Working branch: **`v2`**. `main` is untouched and still matches the live site.
-Nothing is deployed to Cloudflare — Isaac deploys.
+The new site runs on a private preview that Cloudflare rebuilds from `v2` on every push; the live domain is untouched.
 
-## Morning summary for Isaac — Monday 9 November
+## Summary for Isaac — Monday 9 November (updated after session 4)
+
+### See it now
+**https://isaacandersonart-v2.bobdylan2000.workers.dev** — the new site on Cloudflare, on its own private address
+(hidden from Google). Your live site isn't touched. Every change saved to `v2` (by Claude or by you in the web
+editor) shows up there about 2–3 minutes later.
 
 ### What's done
-The new site is complete and working on the `v2` branch, built from your Claude Design export but rewritten as a
-clean, fast Astro site in the same look and voice.
+- **The whole new site**: 46 works in one catalogue, a page per work (size in in/cm, status, price or "Price on
+  request", close-up zoom, print-ready spec sheet, **View on your wall**, an inquiry form that asks buy / hold /
+  see in person), inquiry list, **Ask AI** on every page, art-fair page with a QR booth card, commission form, web
+  editor at `/admin/`, and redirects from every old address.
+- **Today:** the preview on Cloudflare; the site's building blocks upgraded (Astro 7) so the 5 security warnings
+  are gone — checked pixel by pixel, nothing visible changed; two phone bugs found on the real preview and fixed —
+  the **phone menu** was cut off after its first link, and an **Ask AI** question sent in the first second or two
+  was lost. 47 automated checks.
 
-- **46 works, one catalogue** (v1 had 84 numbered slots with the same piece filed up to four times). Every work has
-  its own shareable page with size (in and cm), status, price or "Price on request", close-up zoom, a one-page
-  spec sheet when printed, **View on your wall** (true scale, sample room or their own photo), and an inquiry form
-  that asks whether they want to buy, hold it for a client, or see it in person.
-- **Selling tools:** inquiry list (shortlist several works, send one inquiry), **Ask AI** on every page (instant
-  answers, finds works by collection, size or colour; Claude answers the rest once you add an API key), a phone-first
-  **art-fair page** with a printable QR booth card, and a commission form.
-- **Fixed from v1:** the inquiry form running off phone screens, ~85 visible placeholders, pages without titles or
-  link previews, sold works marked "Available", the hero overlapping on phones.
-- **Speed and quality:** home page main image 9.7 s → 0.8 s on a slow phone connection; Lighthouse 100 for
-  accessibility, best practices and SEO; zero accessibility violations; strict security headers; 41 automated checks.
-- **Easy to change:** a web editor at `/admin/` (prices, status, photos, new works, the assistant's answers, shows),
-  usable from your phone. Every old link (`/about.html`, the designer's `/available.html`…) redirects to its new page.
-
-### See it
-- **Without installing anything:** the visual tour, https://claude.ai/artifact/X4aVmg3vS3rNiop8ibPZVP
-- **On your computer:** install Node 20+, then in the repo folder run `npm install` and `npm run dev`, and open
-  http://localhost:4321
-- **On Cloudflare, privately:** `npx wrangler login`, then `npm run deploy` — it publishes to a separate preview
-  address (`isaacandersonart-v2…workers.dev`); your live site isn't touched. README › Deploying has the rest.
+### Switch-ons waiting on you (a few minutes each)
+1. **Ask AI's full answers:** in the Claude Console make a *Website* workspace with a monthly spend limit and a key;
+   paste the key into Cloudflare (README › Ask AI has the exact taps). Roughly 1–4¢ per question on Opus 5.5,
+   less on Sonnet or Haiku — your choice. Common questions are answered instantly and free either way.
+2. **Web editor:** make a GitHub token and sign in at the preview's `/admin/` (README › The web editor).
 
 ### What only you can supply (full list in `docs/CONTENT-NEEDED.md`)
 1. Titles, sizes and years for the 37 untitled works (they show as "Untitled (Abstract 04)" etc. until then).
@@ -42,15 +38,16 @@ clean, fast Astro site in the same look and voice.
 ### Decisions waiting on you
 1. Show prices on the site, or "Price on request"?
 2. "Buy now" through Stripe Payment Links, a deposit to reserve, or inquiry only?
-3. Switch on AI answers? Needs an Anthropic API key (`npx wrangler secret put ANTHROPIC_API_KEY`) and a monthly
-   spend limit. Default model is `claude-opus-5-5`; `claude-haiku-5-5` costs about 1/40th as much.
-4. Keep the Gmail address public, or set up studio@isaacandersonart.com (free with Cloudflare Email Routing)?
+3. Which AI model for Ask AI (above)?
+4. Public email: the site shows your Gmail. Your domain's email already runs through IONOS, so a
+   studio@isaacandersonart.com address could be made there (Cloudflare's email forwarding would replace IONOS mail).
 5. Formspree's free plan allows 50 messages a month — upgrade if inquiries outgrow it.
+6. When to go live.
 
-### Going live, when you're ready
-Preview first (above) → in Cloudflare, move isaacandersonart.com and www from the old Worker
-(`solitary-thunder-8ff9`) to `isaacandersonart-v2` → merge `v2` into `main` → switch the web editor's branch to
-`main` (`public/admin/config.yml`) → turn on Web Analytics. The old Worker stays as an instant rollback.
+### Going live, when you say so
+In Cloudflare, move isaacandersonart.com and www from the old site to the new one → check everything on a phone →
+make `main` match `v2` and point the automatic builds and the web editor at `main` → turn on "Always Use HTTPS".
+The old site stays ready to switch back to instantly. Visitor statistics are already on. (HANDOFF §8 has the detail.)
 
 ## How to resume (for Claude)
 
@@ -177,7 +174,7 @@ Isaac uploaded three images to `main` overnight (`images/library/8-jbpg-3000.web
 is the catalogue work `untitled-figurative-14`; `8-jbpg-3000` duplicates the second photo of `untitled-figurative-13`;
 `final-6003512` is a room photo (unused). `main` itself is left untouched.
 
-### 2026-11-09 07:05–07:15 ET — session 4
+### 2026-11-09 07:05–07:15 ET — session 4 (start)
 - Health check on a fresh clone: `npm ci`, `npm run check` (0 errors), `npm test` (41 pass, 9 skipped) — all green.
 - **`npm audit` flags 5 advisories** in the build tooling: Astro 5.18.2 (11 advisories; worst rated critical, code
   execution via AVIF image optimisation), sharp 0.34.5 (libvips/libheif/librsvg), zod 3.25.76 (memory exhaustion),
@@ -190,3 +187,29 @@ is the catalogue work `untitled-figurative-14`; `8-jbpg-3000` duplicates the sec
 - Cloud-session notes: the Cloudflare API connector is signed in to Isaac's account (read-only check, nothing changed);
   this sandbox can't reach api.cloudflare.com, so a deploy from a cloud session needs a Cloudflare API token saved as
   a network credential — or Isaac deploys from his own computer.
+
+### 2026-11-09 07:30–09:00 ET — session 4 (continued): preview, Astro 7, two phone fixes
+Isaac: "do all you can that doesn't need my titles and sizes". With his go-ahead for the preview:
+- **Preview on Cloudflare**, set up through the Cloudflare connector the way his other apps deploy: new Worker
+  `isaacandersonart-v2`, repo connection, Workers Builds trigger "Preview from v2" (`npm run build`, `npx wrangler
+  deploy`), first build manual, then every push builds by itself (~1–2.5 min). Live at
+  https://isaacandersonart-v2.bobdylan2000.workers.dev. `.node-version` 22; `X-Robots-Tag: noindex` on workers.dev.
+  Checked on the real host: every page type, CSP (no violations), redirects, 404, brotli, caching, Ask AI hand-off.
+- **Ask AI bug (found on the preview):** a question sent while the assistant's code was loading submitted the form
+  natively and reloaded the page. The launcher now queues it; if the code can't load, the form's action hands the
+  question to `/inquire/?q=…`. Two tests (delayed and blocked chunk), both failing before the fix.
+- **Astro 5.18.2 → 7.4.7, sharp 0.35.5** (npm audit 5 → 0): `compressHTML: true`, `z` from `astro/zod` + `z.url()`,
+  Playwright starts `astro preview --ignore-lock` (Astro 7 backgrounds it for agents), wall-view title space.
+  Compared with an Astro 5 build of the same commit: all 30 page screenshots pixel-identical (one 1px full-page
+  capture artifact, identical when captured directly), markup differs only in entity spelling and script position.
+- **Phone menu bug (found by that comparison):** the header's `backdrop-filter` made it the containing block for
+  the fixed menu, so on phones only the first link showed and taps went to the page behind (also on the old build).
+  No blur while the menu is open; prefixed `-webkit-backdrop-filter` first so the minifier keeps the standard one.
+  Test: every menu link is on top where a finger lands (fails without the fix).
+- **Ask AI Worker:** server-side fallbacks sent only to Opus/Sonnet (Haiku has none). Cost per Claude-answered
+  question estimated from current prices and the measured ~18k-character prompt: Opus 5.5 ~1–4¢, Sonnet 5.5 ~1–2¢,
+  Haiku 5.5 ~0.1¢. README: no-command-line switch-on (Console workspace + spend limit, Cloudflare secret).
+- Read-only zone check: MX at IONOS, Always Use HTTPS off, Web Analytics already on (auto-install). Recorded in
+  HANDOFF; nothing changed. Isaac's AI assistant repo (Art-Talk-Back) read for context only — the website's Ask AI
+  stays separate (public visitors, read-only catalogue, its own spend limit).
+- 47 tests pass (11 skipped by design); `npm run check` 0/0/0.

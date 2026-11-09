@@ -51,8 +51,9 @@ Not sure what a work is missing? `npm run content:report` writes a checklist to 
 ### The web editor (phone or computer)
 
 **isaacandersonart.com/admin/** is a visual editor for the catalogue and the assistant's answers: change prices
-and status, upload photos, add new works, reorder, edit what Ask AI says. Each save is committed to GitHub and the site rebuilds itself (once Cloudflare builds
-are connected — see Deploying, step 3).
+and status, upload photos, add new works, reorder, edit what Ask AI says. Each save is committed to GitHub and
+Cloudflare rebuilds the site by itself, so the change is online about 2–3 minutes later. Until go-live, use the
+preview's editor: **https://isaacandersonart-v2.bobdylan2000.workers.dev/admin/**.
 
 One-time setup (about two minutes):
 
@@ -75,17 +76,23 @@ edit it in the web editor (**Assistant answers**) or on GitHub to change or add 
 small Worker in `worker/`, which only knows what's in the catalogue and FAQ (it is told never to
 invent prices, sizes or policies) and hands anything else to the studio.
 
-To switch the AI on after deploying, add your Anthropic API key as a secret:
+To switch the AI on (no command line needed):
 
-```bash
-npx wrangler secret put ANTHROPIC_API_KEY
-```
+1. **Claude Console** (platform.claude.com) → **Settings → Workspaces** → create a workspace called *Website*.
+   Select it → **Spend limits** → set a monthly cap (for example $20) and an alert. Then create an API key in
+   that workspace and copy it. A separate workspace keeps the website's spending apart from the studio assistant's.
+2. **Cloudflare dashboard** → **Workers & Pages** → `isaacandersonart-v2` → **Settings → Variables and Secrets →
+   Add** → type **Secret**, name `ANTHROPIC_API_KEY`, paste the key → **Deploy**. Secrets survive every rebuild.
+
+(From a terminal, `npx wrangler secret put ANTHROPIC_API_KEY` does the same as step 2.)
 
 Without a key the assistant still works — FAQ answers and catalogue search are instant, and other
-questions become a prefilled inquiry. Settings in `wrangler.jsonc → vars`:
-`ASSISTANT_MODEL` (default `claude-opus-5-5`; `claude-haiku-5-5` costs about 1/40th as much) and
-`ASSISTANT_EFFORT` (`low` = fastest replies). Set a monthly spend limit in the Anthropic Console.
-Each visitor is limited to about 12 questions a minute.
+questions become a prefilled inquiry. Only questions the FAQ can't answer reach Claude, and each one sends
+the catalogue and FAQ (about 18,000 characters, cached between a visitor's questions). Rough cost per such
+question (November 2026 prices): **Opus 5.5** about 1–4¢, **Sonnet 5.5** about 1–2¢, **Haiku 5.5** about 0.1¢.
+Settings in `wrangler.jsonc → vars` (change them in the repo, not the dashboard — each deploy rewrites them):
+`ASSISTANT_MODEL` (default `claude-opus-5-5`; `claude-sonnet-5-5` or `claude-haiku-5-5` cost less) and
+`ASSISTANT_EFFORT` (`low` = fastest replies). Each visitor is limited to about 12 questions a minute.
 
 **View on your wall** appears on every work that has a width and height. It shows the piece at true
 size in a sample room, or on a photo of the visitor's own wall; the photo never leaves their device.
@@ -98,7 +105,7 @@ and a keep-in-touch form tagged "Art fair page". Print the booth card with its Q
 
 ## Running it locally
 
-Needs Node 20 or newer.
+Needs Node 22.23.4 or newer (Astro 7's minimum; `.node-version` pins 22 for Cloudflare's builds).
 
 ```bash
 npm install
@@ -114,16 +121,21 @@ npm run content:report
 
 The site is plain static files in `dist/`, served by a Cloudflare Worker (`wrangler.jsonc`).
 
-1. **Preview first:** `npm run deploy` (build + `wrangler deploy`) publishes to a separate preview Worker
-   (`isaacandersonart-v2`) with its own `*.workers.dev` address. The live site is not touched.
+1. **Preview (running now):** the Worker `isaacandersonart-v2` is connected to this repo with Workers Builds
+   (trigger "Preview from v2": `npm run build`, then `npx wrangler deploy`). Every push to `v2` — including
+   web editor saves — rebuilds **https://isaacandersonart-v2.bobdylan2000.workers.dev** in about 2–3 minutes.
+   The preview is hidden from search engines (`X-Robots-Tag: noindex` on `*.workers.dev`, see `public/_headers`).
+   `npm run deploy` still works from a computer after `npx wrangler login`.
 2. **Go live:** in the Cloudflare dashboard → Workers & Pages → `isaacandersonart-v2` → Settings → Domains,
    add `isaacandersonart.com` and `www.isaacandersonart.com`. (Remove them from the old Worker,
-   `solitary-thunder-8ff9`, first.) The old Worker can stay as an instant rollback.
-3. **Automatic deploys (optional):** connect this GitHub repo in Workers & Pages → Settings → Builds, with build
-   command `npm run build`. Every push to the chosen branch then redeploys.
+   `solitary-thunder-8ff9`, first.) The old Worker stays as an instant rollback: point the domains back.
+3. **After go-live:** merge `v2` into `main`, switch the build trigger's branch to `main` (Settings → Builds) and
+   the web editor's `branch:` to `main` (`public/admin/config.yml`), and turn on **Always Use HTTPS** for the
+   domain (SSL/TLS → Edge Certificates).
 
 Old v1 addresses (`/about.html`, `/available.html`, …) redirect to their new pages via `public/_redirects`.
-For visitor statistics, turn on **Web Analytics** for the domain in the Cloudflare dashboard (free, no cookies).
+Visitor statistics: **Web Analytics** is already on for the domain (Cloudflare adds it to every page; free,
+no cookies) — the site's security policy allows it.
 
 ## How the code is organised
 

@@ -83,6 +83,9 @@
 - [x] Page transitions: a card's artwork glides into its page (View Transitions, no JavaScript)
 - [x] Shows & exhibitions data (`src/content/shows.yaml`), editable in the web editor
 - [x] Assistant answers (`src/content/faq.yaml`) editable in the web editor
+- [x] Private preview on Cloudflare (Workers Builds from `v2`), checked on the real host
+- [x] Astro 7.4.7 + sharp 0.35.5 (npm audit clean), pixel-compared with the Astro 5 build
+- [x] Phone fixes found on the preview: menu cut off by the header blur; Ask AI question lost while loading
 - [ ] When Isaac supplies content: titles/sizes, prices, featured works, bio, shows (see CONTENT-NEEDED)
 - [ ] After go-live: switch the web editor's branch to `main`; turn on Web Analytics; add the Anthropic key
 
