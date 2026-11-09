@@ -50,3 +50,23 @@ test('phone menu moves focus in, and Escape returns it', async ({ page }, info) 
   await expect(page.locator('#menu')).toBeHidden();
   await expect(page.locator('[data-menu-btn]')).toBeFocused();
 });
+
+// The header's frosted blur once trapped the fixed menu inside the header bar: only the first link
+// showed and taps went to the page behind. Every link must be on top where a finger would land.
+test('phone menu covers the page and every link can be tapped', async ({ page }, info) => {
+  test.skip(info.project.name !== 'phone', 'phone layout only');
+  for (const path of ['/', '/works/']) {
+    await page.goto(path);
+    await page.click('[data-menu-btn]');
+    const links = page.locator('#menu a');
+    await expect(links.first()).toBeVisible();
+    for (const link of await links.all()) {
+      const onTop = await link.evaluate((a) => {
+        const r = a.getBoundingClientRect();
+        const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        return r.bottom <= innerHeight && !!hit && (a === hit || a.contains(hit));
+      });
+      expect(onTop, `${await link.innerText()} on ${path}`).toBe(true);
+    }
+  }
+});

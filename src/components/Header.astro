@@ -114,8 +114,9 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     z-index: 50;
     color: var(--ink);
     background: color-mix(in srgb, var(--plaster) 88%, transparent);
-    backdrop-filter: saturate(1.4) blur(12px);
+    /* Prefixed first: the CSS minifier keeps only the last of a prefixed/standard pair. */
     -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    backdrop-filter: saturate(1.4) blur(12px);
     border-bottom: 1px solid transparent;
     transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
   }
@@ -124,8 +125,16 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   }
   .header[data-dark]:not([data-scrolled]):not([data-open]) {
     background: transparent;
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
     color: var(--on-dark);
+  }
+  /* A blurred element traps position: fixed children inside its own box, which cut the phone menu
+     off below the first link. The open menu covers the page, so the header needs no blur then. */
+  .header[data-open] {
+    background: var(--plaster);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
   .bar {
     display: flex;
