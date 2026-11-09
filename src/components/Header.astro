@@ -1,0 +1,274 @@
+---
+import { site } from '~/lib/site';
+
+interface Props {
+  /** Light text over a dark first section until the page scrolls. */
+  dark?: boolean;
+}
+const { dark = false } = Astro.props;
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+---
+
+<header class="header" data-header data-dark={dark ? '' : undefined}>
+  <div class="bar">
+    <a class="brand" href="/" aria-label="Isaac Anderson Art — home">
+      <span class="brand-name">Isaac Anderson</span>
+      <span class="brand-tag">Art</span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {
+          site.nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a class="btn btn--primary cta" href="/inquire/">Inquire</a>
+
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-menu-btn>
+      <span class="visually-hidden">Menu</span>
+      <span class="menu-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="menu" id="menu" data-menu hidden>
+    <nav aria-label="Main (mobile)">
+      <ul>
+        {
+          site.nav.map((item, i) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                <span class="menu-num">{String(i + 1).padStart(2, '0')}</span>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <a class="btn btn--primary menu-cta" href="/inquire/">Inquire</a>
+    <p class="menu-meta mono">
+      <a href={site.phone.href}>{site.phone.display}</a><br />
+      <a href={site.instagram.href} rel="noopener">{site.instagram.handle}</a>
+    </p>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const btn = header.querySelector<HTMLButtonElement>('[data-menu-btn]')!;
+  const menu = header.querySelector<HTMLElement>('[data-menu]')!;
+
+  const setOpen = (open: boolean) => {
+    btn.setAttribute('aria-expanded', String(open));
+    menu.hidden = !open;
+    header.toggleAttribute('data-open', open);
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+  };
+  btn.addEventListener('click', () => setOpen(menu.hidden));
+  menu.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      setOpen(false);
+      btn.focus();
+    }
+  });
+  matchMedia('(min-width: 900px)').addEventListener('change', (e) => e.matches && setOpen(false));
+
+  // Solid background once the page scrolls.
+  const onScroll = () => header.toggleAttribute('data-scrolled', scrollY > 8);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--plaster) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(12px);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .header[data-scrolled] {
+    border-bottom-color: var(--line);
+  }
+  .header[data-dark]:not([data-scrolled]):not([data-open]) {
+    background: transparent;
+    backdrop-filter: none;
+    color: var(--on-dark);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: var(--nav-h);
+    padding-inline: var(--gutter);
+    padding-top: env(safe-area-inset-top);
+    box-sizing: content-box;
+    max-width: calc(var(--max) + 2 * var(--gutter));
+    margin-inline: auto;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-right: auto;
+    white-space: nowrap;
+  }
+  .brand-name {
+    font: 700 1.05rem / 1 var(--font-display);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .brand-tag {
+    font: 500 0.625rem / 1 var(--font-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rust);
+    border: 1px solid currentColor;
+    padding: 0.3rem 0.4rem 0.25rem;
+  }
+  .nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    padding: 0;
+  }
+  .nav a {
+    position: relative;
+    font: 500 0.875rem / 1 var(--font-sans);
+    padding-block: 0.5rem;
+  }
+  .nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--rust);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease);
+  }
+  .nav a:hover::after,
+  .nav a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  .cta {
+    min-height: 2.5rem;
+    padding: 0.7rem 1.1rem;
+  }
+  .menu-btn {
+    display: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.6rem;
+    background: none;
+    border: 0;
+    position: relative;
+  }
+  .menu-icon,
+  .menu-icon::before,
+  .menu-icon::after {
+    position: absolute;
+    left: 50%;
+    width: 1.375rem;
+    height: 1.5px;
+    margin-left: -0.6875rem;
+    background: currentColor;
+    transition: transform 0.3s var(--ease), opacity 0.2s;
+  }
+  .menu-icon {
+    top: 50%;
+  }
+  .menu-icon::before,
+  .menu-icon::after {
+    content: '';
+    left: 0;
+    margin-left: 0;
+  }
+  .menu-icon::before {
+    transform: translateY(-6px);
+  }
+  .menu-icon::after {
+    transform: translateY(6px);
+  }
+  [aria-expanded='true'] .menu-icon {
+    background: transparent;
+  }
+  [aria-expanded='true'] .menu-icon::before {
+    transform: rotate(45deg);
+  }
+  [aria-expanded='true'] .menu-icon::after {
+    transform: rotate(-45deg);
+  }
+
+  .menu {
+    position: fixed;
+    inset: calc(var(--nav-h) + env(safe-area-inset-top)) 0 0;
+    background: var(--plaster);
+    color: var(--ink);
+    padding: 2rem var(--gutter) calc(2rem + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    overflow-y: auto;
+  }
+  .menu ul {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .menu li a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+    font: 400 1.75rem / 1.1 var(--font-serif);
+  }
+  .menu li a[aria-current='page'] {
+    color: var(--rust);
+  }
+  .menu-num {
+    font: 500 0.6875rem var(--font-mono);
+    color: var(--rust);
+  }
+  .menu-cta {
+    align-self: stretch;
+  }
+  .menu-meta {
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  @media (max-width: 899px) {
+    .nav,
+    .cta {
+      display: none;
+    }
+    .menu-btn {
+      display: block;
+    }
+  }
+  @media (min-width: 900px) {
+    .menu {
+      display: none;
+    }
+  }
+</style>

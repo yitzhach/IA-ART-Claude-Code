@@ -1,0 +1,75 @@
+---
+import Base from '~/layouts/Base.astro';
+import InquiryForm from '~/components/InquiryForm.astro';
+
+const paths = [
+  { href: '/works/?status=available', label: 'Buy a piece', text: 'See what’s available now, with sizes and prices.' },
+  { href: '/commissions/', label: 'Commission a work', text: 'A piece made for your space, from first sketch to install.' },
+  { href: '#inquire', label: 'Trade & projects', text: 'Designers, architects and consultants — tell us about the project.' },
+];
+---
+
+<Base title="Inquire" description="Ask about a piece, start a commission, or a trade project. The studio replies within two working days.">
+  <section class="wrap page-head">
+    <p class="eyebrow">Inquire</p>
+    <h1 class="display">Let’s talk</h1>
+    <ul class="paths">
+      {
+        paths.map((p) => (
+          <li>
+            <a href={p.href}>
+              <span class="p-label">{p.label} →</span>
+              <span class="p-text">{p.text}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="wrap section--tight">
+    <InquiryForm source="Inquire page" />
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) clamp(2rem, 1rem + 3vw, 3.5rem);
+    display: grid;
+    gap: 2rem;
+  }
+  .paths {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .paths a {
+    display: grid;
+    gap: 0.4rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    transition: border-color 0.2s var(--ease);
+  }
+  .paths a:hover {
+    border-color: var(--rust);
+  }
+  .p-label {
+    font: 400 var(--step-1) var(--font-serif);
+  }
+  .p-text {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .section--tight {
+    padding-bottom: var(--section);
+  }
+  @media (max-width: 799px) {
+    .paths {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

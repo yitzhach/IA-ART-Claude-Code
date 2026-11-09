@@ -1,5 +1,311 @@
 ---
-import { getCollection } from 'astro:content';
-const works = await getCollection('works');
+import Base from '~/layouts/Base.astro';
+import ArtImage from '~/components/ArtImage.astro';
+import WorkGrid from '~/components/WorkGrid.astro';
+import InquiryForm from '~/components/InquiryForm.astro';
+import { site, collectionInfo, type CollectionKey } from '~/lib/site';
+import { getWorks, inCollection, altText } from '~/lib/works';
+import hero from '~/assets/site/hero-macro.webp';
+import lobby from '~/assets/site/object-014.webp';
+import dining from '~/assets/site/insitu-collection.webp';
+import living from '~/assets/site/insitu-hospitality.webp';
+
+const works = await getWorks();
+const featured = (() => {
+  const picked = works.filter((w) => w.data.featured);
+  if (picked.length) return picked.slice(0, 8);
+  // Until works are marked `featured: true`, show available pieces first, then titled ones.
+  const rank = (s: string) => (s === 'available' ? 0 : s === 'inquire' ? 1 : 2);
+  return [...works]
+    .filter((w) => w.data.title)
+    .sort((a, b) => rank(a.data.status) - rank(b.data.status))
+    .slice(0, 8);
+})();
+const availableCount = works.filter((w) => w.data.status === 'available').length;
+const collections = (Object.keys(collectionInfo) as CollectionKey[]).map((key) => {
+  const items = inCollection(works, key);
+  return { key, ...collectionInfo[key], count: items.length, cover: items[0] };
+});
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Isaac Anderson',
+  jobTitle: 'Sculptor',
+  url: site.url,
+  sameAs: [site.instagram.href],
+  knowsAbout: ['Sculpture', 'Cement', 'Plaster', 'Mixed media', 'Site-specific art'],
+};
 ---
-<p>{works.length} works</p>
+
+<Base jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="wrap hero-head">
+      <p class="eyebrow">Sculptural studio — cement · plaster · steel</p>
+      <h1 class="display">
+        Isaac <span class="outline">Anderson</span>
+      </h1>
+      <div class="hero-sub">
+        <p class="subtitle">{site.motto}</p>
+        <p class="lede">
+          Site-specific sculptural work in cement and plaster — for private collections, commercial, interior and
+          exterior spaces.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="/works/">See the works</a>
+          <a class="btn btn--ghost" href="/commissions/">Commission a piece</a>
+        </div>
+      </div>
+    </div>
+    <figure class="hero-media wrap">
+      <ArtImage src={hero} alt="A wide horizon painting in plaster and cement hung above a rustic bench beside an olive tree" sizes="(min-width: 1400px) 1312px, 100vw" priority />
+      <figcaption class="mono">“Upper Limit” — commission in progress, 2026 · digital mock-up for the client</figcaption>
+    </figure>
+  </section>
+
+  <section class="section" aria-labelledby="featured-h">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <div>
+          <p class="eyebrow">Works</p>
+          <h2 class="title" id="featured-h">Selected works</h2>
+        </div>
+        <div class="head-links">
+          {availableCount > 0 && <a class="link" href="/works/?status=available">{availableCount} available now</a>}
+          <a class="link" href="/works/">All {works.length} works →</a>
+        </div>
+      </header>
+      <WorkGrid works={featured} />
+    </div>
+  </section>
+
+  <section class="section section--dark" aria-labelledby="collections-h">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <div>
+          <p class="eyebrow">Collections</p>
+          <h2 class="title" id="collections-h">Three bodies of work</h2>
+        </div>
+      </header>
+      <ul class="collections">
+        {
+          collections.map((c, i) => (
+            <li data-reveal>
+              <a href={`/collections/${c.key}/`} class="collection">
+                <span class="c-num mono">0{i + 1}</span>
+                {c.cover && (
+                  <span class="c-thumb">
+                    <ArtImage src={c.cover.data.images[0]} alt={altText(c.cover)} sizes="96px" />
+                  </span>
+                )}
+                <span class="c-name">{c.name}</span>
+                <span class="c-blurb">{c.blurb}</span>
+                <span class="c-count mono">{c.count} works →</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="spaces-h">
+    <div class="wrap">
+      <header class="section-head" data-reveal>
+        <div>
+          <p class="eyebrow">Commissions</p>
+          <h2 class="title" id="spaces-h">Made for the space it lives in</h2>
+        </div>
+        <p class="lede">
+          Developed with architects, designers and private collectors from first sketch to final install. {site.leadTime}
+          · to-the-trade inquiries welcome.
+        </p>
+      </header>
+      <div class="spaces">
+        <figure data-reveal>
+          <ArtImage src={lobby} alt="A dark horizon panel framed above leather sofas in a hotel lobby" sizes="(min-width: 900px) 33vw, 100vw" />
+          <figcaption><span class="label">Lobby · Beverly Hills</span> “Strata” — gypsum, cement and custom pigments, framed on a wood panel. 48 × 48 in.</figcaption>
+        </figure>
+        <figure data-reveal>
+          <ArtImage src={dining} alt="A grey and amber horizon panel above a long timber dining table" sizes="(min-width: 900px) 33vw, 100vw" />
+          <figcaption><span class="label">Residential</span> A horizon piece scaled to the dining room it hangs in.</figcaption>
+        </figure>
+        <figure data-reveal>
+          <ArtImage src={living} alt="A tall figurative plaster relief in a light living room" sizes="(min-width: 900px) 33vw, 100vw" />
+          <figcaption><span class="label">Interior</span> Figurative work in a calm, light living space.</figcaption>
+        </figure>
+      </div>
+      <div class="center" data-reveal>
+        <a class="btn btn--primary" href="/commissions/">How a commission works</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <InquiryForm source="Home page" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-head {
+    padding-top: clamp(2rem, 1rem + 4vw, 5rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .hero-head .display {
+    font-size: clamp(3rem, 0.6rem + 10.5vw, 10rem);
+    line-height: 0.9;
+  }
+  .hero-head .display .outline {
+    display: inline-block;
+  }
+  .hero-sub {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+    align-items: end;
+    gap: 1.5rem 3rem;
+    margin-top: 1rem;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero-media {
+    margin-top: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  .hero-media :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 8;
+    object-fit: cover;
+  }
+  .hero-media figcaption {
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    text-align: right;
+  }
+
+  .section-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.5rem 3rem;
+    margin-bottom: clamp(2rem, 1rem + 3vw, 3.5rem);
+  }
+  .section-head .title {
+    margin-top: 0.6rem;
+  }
+  .section-head .lede {
+    max-width: 30rem;
+    font-size: 1rem;
+  }
+  .head-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .section--tight {
+    padding-top: 0;
+  }
+
+  .collections {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--line-dark);
+  }
+  .collection {
+    display: grid;
+    grid-template-columns: 2.5rem 4.5rem minmax(0, 14rem) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--line-dark);
+    transition: background-color 0.3s var(--ease);
+  }
+  .collection:hover {
+    background: #24211e;
+  }
+  .collection:hover .c-name {
+    color: #e08a5f;
+  }
+  .c-num,
+  .c-count {
+    color: var(--on-dark-muted);
+  }
+  .c-thumb :global(img) {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: cover;
+  }
+  .c-name {
+    font: 400 var(--step-2) / 1.1 var(--font-serif);
+    transition: color 0.3s var(--ease);
+  }
+  .c-blurb {
+    color: var(--on-dark-muted);
+    font-size: 0.9375rem;
+  }
+
+  .spaces {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  }
+  .spaces :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .spaces figcaption {
+    display: grid;
+    gap: 0.3rem;
+    margin-top: 0.9rem;
+    font: italic 300 1.0625rem / 1.4 var(--font-serif);
+  }
+  .center {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(2rem, 1rem + 3vw, 3.5rem);
+  }
+
+  @media (max-width: 899px) {
+    .hero-sub {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .hero-media :global(img) {
+      aspect-ratio: 4 / 3;
+    }
+    .collection {
+      grid-template-columns: 4rem minmax(0, 1fr) auto;
+      gap: 0.4rem 1rem;
+    }
+    .c-num {
+      display: none;
+    }
+    .c-thumb {
+      grid-row: span 2;
+    }
+    .c-thumb :global(img) {
+      width: 4rem;
+      height: 4rem;
+    }
+    .c-blurb {
+      grid-column: 2 / -1;
+      font-size: 0.875rem;
+    }
+    .c-count {
+      grid-row: 1;
+      grid-column: 3;
+    }
+    .spaces {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .spaces :global(img) {
+      aspect-ratio: 3 / 2;
+    }
+  }
+</style>

@@ -1,0 +1,171 @@
+---
+import Base from '~/layouts/Base.astro';
+import ArtImage from '~/components/ArtImage.astro';
+import InquiryForm from '~/components/InquiryForm.astro';
+import { site } from '~/lib/site';
+import portrait from '~/assets/site/process-01-material.webp';
+import studio from '~/assets/site/about-studio.webp';
+
+const facts = [
+  { k: 'Studios', v: site.studios.join(' · ') },
+  { k: 'Materials', v: 'Cement · plaster · steel · pigment' },
+  { k: 'Works to', v: 'Commission · available catalogue' },
+  { k: 'Education', v: 'Edmonds, WA · Carnforth, England · Chicago, IL' },
+];
+
+const methods = [
+  'Lime, cement, plaster, raw pigment, geopolymer',
+  'Welded steel armature; sealed formwork',
+  'Single continuous pour; hand-vibrated',
+  'Hand-honed faces, left unsealed',
+];
+---
+
+<Base
+  title="About"
+  description="Isaac Anderson makes cast sculpture and mixed-media relief in cement, plaster, and steel, working between studios in Southern California and Southern Kentucky."
+  shareImage={portrait}
+>
+  <section class="wrap page-head">
+    <p class="eyebrow">About</p>
+    <h1 class="display">Isaac Anderson</h1>
+  </section>
+
+  <section class="wrap bio">
+    <figure>
+      <ArtImage src={portrait} alt="Isaac Anderson hanging a large panel beside stone vessels and an olive tree" sizes="(min-width: 900px) 40vw, 100vw" priority />
+    </figure>
+    <div class="bio-text">
+      <p class="subtitle">I build the order. The material supplies the entropy.</p>
+      <div class="prose">
+        <p>
+          Isaac Anderson makes cast sculpture and mixed-media relief in cement, plaster, and steel. He works between two
+          studios — Southern California and Southern Kentucky — and the split shows up in the work: one half built to
+          tolerance, the other left to weather.
+        </p>
+        <p>
+          Each piece begins as a controlled form and is finished by processes he doesn’t direct: hydration, pigment
+          migration, hairline cracking, and the slow ageing that continues in whatever room the work ends up in.
+        </p>
+        <p>
+          He works to commission for lobbies, hospitality interiors, and private collections, and keeps a small number of
+          available works in the catalogue at any time.
+        </p>
+      </div>
+      <dl class="facts">
+        {
+          facts.map((f) => (
+            <div>
+              <dt class="label">{f.k}</dt>
+              <dd>{f.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--dark statement-band">
+    <div class="wrap statement">
+      <p class="eyebrow">Artist statement</p>
+      <blockquote>
+        <p class="lead">
+          I am drawn to the relationship between order and entropy — to surfaces that bear the marks of time rather than
+          conceal them.
+        </p>
+        <p class="lede">
+          Through layered plasters, mineral pigments, and architectural materials, I seek moments where decay becomes
+          revelation and history becomes tangible. Each work is an invitation to slow down, look closely, and discover the
+          stories held within its layers.
+        </p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="wrap section studio">
+    <figure>
+      <ArtImage src={studio} alt="Concrete panels displayed outdoors on white walls under palm trees" sizes="(min-width: 900px) 60vw, 100vw" />
+    </figure>
+    <div>
+      <p class="label">Materials &amp; methods</p>
+      <ul class="methods">{methods.map((m) => <li>{m}</li>)}</ul>
+      <a class="link" href="/process/">The full process →</a>
+    </div>
+  </section>
+
+  <section class="wrap section--tight">
+    <InquiryForm source="About page" />
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) clamp(2rem, 1rem + 3vw, 3.5rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .bio {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 5.5rem);
+    align-items: start;
+  }
+  .bio figure :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .bio-text {
+    display: grid;
+    gap: 1.75rem;
+  }
+  .facts {
+    border-top: 1px solid var(--line);
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+  .statement-band {
+    margin-top: var(--section);
+  }
+  .statement blockquote {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    max-width: 52rem;
+  }
+  .lead {
+    font: 400 var(--step-3) / 1.2 var(--font-serif);
+  }
+  .studio {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: end;
+  }
+  .methods {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .methods li {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+    font: italic 300 1.125rem var(--font-serif);
+  }
+  .section--tight {
+    padding-bottom: var(--section);
+  }
+  @media (max-width: 899px) {
+    .bio,
+    .studio {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

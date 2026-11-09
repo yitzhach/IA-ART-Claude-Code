@@ -1,0 +1,194 @@
+---
+import Base from '~/layouts/Base.astro';
+import WorkGrid from '~/components/WorkGrid.astro';
+import { collectionInfo } from '~/lib/site';
+import { getWorks } from '~/lib/works';
+
+const works = await getWorks();
+const count = (key: string) => works.filter((w) => w.data.collections.includes(key as never)).length;
+const available = works.filter((w) => w.data.status === 'available').length;
+---
+
+<Base title="Works" description={`The full catalogue — ${works.length} works in cement, plaster and steel by Isaac Anderson. Filter by collection or see what's available now.`}>
+  <section class="wrap page-head">
+    <p class="eyebrow">Catalogue</p>
+    <h1 class="display">Works</h1>
+    <p class="lede">
+      Every piece in one place. Filter by collection, or show only what’s available now — then open any work for
+      size, price and how to bring it home.
+    </p>
+  </section>
+
+  <section class="wrap" aria-label="Catalogue">
+    <form class="filters" data-filters aria-label="Filter works">
+      <fieldset>
+        <legend class="label">Collection</legend>
+        <label><input type="radio" name="collection" value="" checked /><span>All <em>{works.length}</em></span></label>
+        {
+          Object.entries(collectionInfo).map(([key, c]) => (
+            <label>
+              <input type="radio" name="collection" value={key} />
+              <span>
+                {c.name} <em>{count(key)}</em>
+              </span>
+            </label>
+          ))
+        }
+      </fieldset>
+      <fieldset>
+        <legend class="label">Show</legend>
+        <label><input type="radio" name="status" value="" checked /><span>Everything</span></label>
+        <label><input type="radio" name="status" value="available" /><span>Available now <em>{available}</em></span></label>
+      </fieldset>
+      <p class="result mono" aria-live="polite" data-result></p>
+    </form>
+
+    <WorkGrid works={works} eager={4} />
+    <p class="empty" data-empty hidden>
+      Nothing matches yet. <a class="link" href="/inquire/">Ask the studio</a> — new work isn’t always online.
+    </p>
+  </section>
+
+  <section class="section wrap cta-band">
+    <p class="subtitle">Don’t see the right size or palette? Most pieces can be made to commission.</p>
+    <a class="btn btn--primary" href="/commissions/">Start a commission</a>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-filters]')!;
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-grid] > [data-status]')];
+  const result = document.querySelector<HTMLElement>('[data-result]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+
+  const apply = (push = false) => {
+    const data = new FormData(form);
+    const collection = String(data.get('collection') ?? '');
+    const status = String(data.get('status') ?? '');
+    let shown = 0;
+    for (const card of cards) {
+      const ok =
+        (!collection || card.dataset.collections!.split(' ').includes(collection)) &&
+        (!status || card.dataset.status === status);
+      card.hidden = !ok;
+      if (ok) shown++;
+    }
+    result.textContent = `${shown} ${shown === 1 ? 'work' : 'works'}`;
+    empty.hidden = shown > 0;
+    if (push) {
+      const params = new URLSearchParams();
+      if (collection) params.set('collection', collection);
+      if (status) params.set('status', status);
+      history.replaceState(null, '', params.size ? `?${params}` : location.pathname);
+    }
+  };
+
+  // Restore filters from the URL (e.g. /works/?status=available from the footer).
+  const params = new URLSearchParams(location.search);
+  for (const name of ['collection', 'status']) {
+    const v = params.get(name);
+    const input = v && form.querySelector<HTMLInputElement>(`input[name="${name}"][value="${CSS.escape(v)}"]`);
+    if (input) input.checked = true;
+  }
+  form.addEventListener('change', () => apply(true));
+  apply();
+</script>
+
+<style>
+  .page-head {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) clamp(2rem, 1rem + 2vw, 3rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1.25rem 2.5rem;
+    padding-block: 1.25rem;
+    margin-bottom: clamp(1.5rem, 1rem + 2vw, 3rem);
+    border-block: 1px solid var(--line);
+    position: sticky;
+    top: var(--nav-h);
+    z-index: 5;
+    background: var(--plaster);
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  legend {
+    float: left;
+    width: 100%;
+    margin-bottom: 0.6rem;
+  }
+  fieldset label {
+    position: relative;
+  }
+  fieldset input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  fieldset span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.95rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font: 500 0.8125rem / 1 var(--font-sans);
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+  }
+  fieldset em {
+    font: 400 0.6875rem var(--font-mono);
+    font-style: normal;
+    color: var(--muted);
+  }
+  fieldset span:hover {
+    border-color: var(--ink);
+  }
+  fieldset input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--plaster);
+  }
+  fieldset input:checked + span em {
+    color: var(--on-dark-muted);
+  }
+  fieldset input:focus-visible + span {
+    outline: 2px solid var(--rust);
+    outline-offset: 2px;
+  }
+  .result {
+    margin-left: auto;
+    color: var(--muted);
+  }
+  .empty {
+    padding-block: 3rem;
+    color: var(--muted);
+  }
+  .cta-band {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .cta-band .subtitle {
+    max-width: 34rem;
+  }
+  @media (max-width: 699px) {
+    .filters {
+      position: static;
+    }
+    .result {
+      margin-left: 0;
+    }
+  }
+</style>

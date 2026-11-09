@@ -1,0 +1,33 @@
+---
+import WorkCard from './WorkCard.astro';
+import type { Work } from '~/lib/works';
+
+interface Props {
+  works: Work[];
+  /** Number of cards loaded eagerly (above the fold). */
+  eager?: number;
+}
+const { works, eager = 0 } = Astro.props;
+---
+
+<div class="grid" data-grid>
+  {works.map((w, i) => <WorkCard work={w} priority={i < eager} />)}
+</div>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem) clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  }
+  @media (max-width: 1099px) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 699px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

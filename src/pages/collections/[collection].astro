@@ -1,0 +1,91 @@
+---
+import Base from '~/layouts/Base.astro';
+import WorkGrid from '~/components/WorkGrid.astro';
+import { collectionInfo, type CollectionKey } from '~/lib/site';
+import { getWorks, inCollection } from '~/lib/works';
+
+export async function getStaticPaths() {
+  const works = await getWorks();
+  return (Object.keys(collectionInfo) as CollectionKey[]).map((key) => ({
+    params: { collection: key },
+    props: { key, works: inCollection(works, key) },
+  }));
+}
+
+const { key, works } = Astro.props as { key: CollectionKey; works: Awaited<ReturnType<typeof getWorks>> };
+const info = collectionInfo[key];
+const others = (Object.keys(collectionInfo) as CollectionKey[]).filter((k) => k !== key);
+const cover = works[0]?.data.images[0];
+---
+
+<Base title={`${info.name} collection`} description={`${info.blurb} ${works.length} works by Isaac Anderson.`} shareImage={cover}>
+  <section class="wrap page-head">
+    <nav class="mono crumbs" aria-label="Breadcrumb"><a href="/works/">Works</a> <span aria-hidden="true">/</span> Collection</nav>
+    <h1 class="display">{info.name}</h1>
+    <div class="row">
+      <p class="lede">{info.blurb}</p>
+      <p class="mono count">{works.length} works</p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <WorkGrid works={works} eager={4} />
+  </section>
+
+  <section class="section wrap others">
+    <p class="label">Other collections</p>
+    <ul>
+      {
+        others.map((k) => (
+          <li>
+            <a href={`/collections/${k}/`}>{collectionInfo[k].name} →</a>
+          </li>
+        ))
+      }
+      <li><a href="/works/">All works →</a></li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding-block: clamp(1.5rem, 1rem + 2vw, 3rem) clamp(2rem, 1rem + 3vw, 4rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .crumbs {
+    color: var(--muted);
+  }
+  .crumbs a:hover {
+    color: var(--rust);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem 3rem;
+  }
+  .count {
+    color: var(--muted);
+  }
+  .others {
+    border-top: 1px solid var(--line);
+    margin-top: var(--section);
+    display: grid;
+    gap: 1rem;
+  }
+  .others ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 3rem;
+  }
+  .others a {
+    font: 400 var(--step-2) var(--font-serif);
+  }
+  .others a:hover {
+    color: var(--rust);
+  }
+</style>

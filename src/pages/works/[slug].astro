@@ -1,0 +1,301 @@
+---
+import { render } from 'astro:content';
+import Base from '~/layouts/Base.astro';
+import ArtImage from '~/components/ArtImage.astro';
+import WorkGrid from '~/components/WorkGrid.astro';
+import InquiryForm from '~/components/InquiryForm.astro';
+import { site, collectionInfo } from '~/lib/site';
+import {
+  getWorks,
+  related,
+  displayTitle,
+  sizeLabel,
+  sizeLabelCm,
+  priceLabel,
+  statusLabel,
+  altText,
+  summary,
+  workUrl,
+  type Work,
+} from '~/lib/works';
+
+export async function getStaticPaths() {
+  const works = await getWorks();
+  return works.map((work) => ({ params: { slug: work.id }, props: { work, all: works } }));
+}
+
+interface Props {
+  work: Work;
+  all: Work[];
+}
+const { work, all } = Astro.props;
+const { Content } = await render(work);
+const d = work.data;
+const title = displayTitle(work);
+const size = sizeLabel(work);
+const more = related(all, work);
+const primary = d.collections[0];
+const canBuy = d.status === 'available' && d.buyLink;
+
+const details = [
+  size && { k: 'Size', v: `${size}`, sub: sizeLabelCm(work) },
+  d.medium && { k: 'Medium', v: d.medium },
+  d.year && { k: 'Year', v: String(d.year) },
+  d.collections.length && {
+    k: d.collections.length > 1 ? 'Collections' : 'Collection',
+    v: d.collections.map((c) => collectionInfo[c].name).join(', '),
+  },
+].filter(Boolean) as { k: string; v: string; sub?: string }[];
+
+const description = `${summary(work)}. ${d.status === 'sold' ? 'Sold — similar work available by commission.' : priceLabel(work) + '.'} By Isaac Anderson.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'VisualArtwork',
+  name: title,
+  url: new URL(workUrl(work), site.url).href,
+  creator: { '@type': 'Person', name: 'Isaac Anderson', url: site.url },
+  artform: d.collections.includes('sculptural') ? 'Relief sculpture' : 'Mixed media',
+  ...(d.medium && { artMedium: d.medium }),
+  ...(d.year && { dateCreated: String(d.year) }),
+  ...(d.width && { width: { '@type': 'Distance', name: `${d.width} in` } }),
+  ...(d.height && { height: { '@type': 'Distance', name: `${d.height} in` } }),
+  ...(d.status === 'available' &&
+    d.price && {
+      offers: {
+        '@type': 'Offer',
+        price: d.price,
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: new URL(workUrl(work), site.url).href,
+      },
+    }),
+};
+---
+
+<Base title={title} description={description} shareImage={d.images[0]} shareAlt={altText(work)} jsonLd={jsonLd}>
+  <nav class="wrap crumbs mono" aria-label="Breadcrumb">
+    <a href="/works/">Works</a>
+    {primary && (
+      <>
+        <span aria-hidden="true">/</span>
+        <a href={`/collections/${primary}/`}>{collectionInfo[primary].name}</a>
+      </>
+    )}
+  </nav>
+
+  <article class="wrap work">
+    <div class="media">
+      {
+        d.images.map((img, i) => (
+          <figure class="plate">
+            <ArtImage
+              src={img}
+              alt={i === 0 ? altText(work) : `${title} — view ${i + 1}`}
+              sizes="(min-width: 1000px) 60vw, 100vw"
+              priority={i === 0}
+            />
+          </figure>
+        ))
+      }
+    </div>
+
+    <div class="info">
+      <div class="sticky">
+        <p class={`badge badge--${d.status}`}>{statusLabel[d.status]}</p>
+        <h1 class="title">{title}</h1>
+        {size && <p class="size mono">{size}</p>}
+        <p class="price">{priceLabel(work)}</p>
+
+        <div class="actions">
+          {canBuy && (
+            <a class="btn btn--primary" href={d.buyLink} rel="noopener">
+              Buy now
+            </a>
+          )}
+          {d.status === 'sold' || d.status === 'commission' ? (
+            <a class="btn btn--primary" href="/commissions/#inquire">
+              Commission something similar
+            </a>
+          ) : (
+            <a class={`btn ${canBuy ? 'btn--ghost' : 'btn--primary'}`} href="#inquire">
+              {d.status === 'reserved' ? 'Join the waiting list' : 'Inquire about this piece'}
+            </a>
+          )}
+        </div>
+
+        {
+          details.length > 0 && (
+            <dl class="details">
+              {details.map((row) => (
+                <div>
+                  <dt class="label">{row.k}</dt>
+                  <dd>
+                    {row.v}
+                    {row.sub && <span class="sub mono">{row.sub}</span>}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+
+        <div class="statement prose">
+          <Content />
+        </div>
+
+        <ul class="assurances mono">
+          <li>Delivered and installed throughout the U.S. and internationally</li>
+          <li>Questions about size, colour or a custom version? Just ask</li>
+          <li>To-the-trade inquiries welcome</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <section class="section wrap">
+    <InquiryForm
+      variant={d.status === 'sold' || d.status === 'commission' ? 'commission' : 'purchase'}
+      works={[title]}
+      source={`Work page — ${title}`}
+      heading={d.status === 'sold' ? `Something like ${title}` : undefined}
+      intro={d.status === 'sold'
+        ? `${title} has found its home. Tell us about your space and the studio can make a piece in the same spirit. ${site.replyPromise}`
+        : undefined}
+    />
+  </section>
+
+  {
+    more.length > 0 && (
+      <section class="section wrap more" aria-labelledby="more-h">
+        <header class="more-head">
+          <h2 class="title" id="more-h">
+            More {primary ? collectionInfo[primary].name.toLowerCase() : ''} work
+          </h2>
+          <a class="link" href={primary ? `/collections/${primary}/` : '/works/'}>
+            See all →
+          </a>
+        </header>
+        <WorkGrid works={more} />
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .crumbs {
+    display: flex;
+    gap: 0.6rem;
+    padding-block: 1.5rem;
+    color: var(--muted);
+  }
+  .crumbs a:hover {
+    color: var(--rust);
+  }
+  .work {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 5.5rem);
+    align-items: start;
+  }
+  .media {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .plate {
+    display: grid;
+    place-items: center;
+    background: var(--paper);
+    padding: clamp(1.25rem, 0.5rem + 4vw, 4.5rem);
+    min-height: min(80vh, 52rem);
+  }
+  .plate :global(img) {
+    max-height: calc(min(80vh, 52rem) - 2 * clamp(1.25rem, 0.5rem + 4vw, 4.5rem));
+    width: auto;
+    object-fit: contain;
+    box-shadow: 0 2px 2px rgb(27 25 23 / 0.08), 0 24px 48px -20px rgb(27 25 23 / 0.5);
+  }
+  .sticky {
+    position: sticky;
+    top: calc(var(--nav-h) + 2rem);
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .info .title {
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+  .size {
+    color: var(--muted);
+    margin-top: -0.5rem;
+  }
+  .price {
+    font: 400 var(--step-1) var(--font-serif);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  .actions .btn {
+    flex: 1 1 14rem;
+  }
+  .details {
+    width: 100%;
+    border-top: 1px solid var(--line);
+  }
+  .details div {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .details dd {
+    font-size: 0.9375rem;
+  }
+  .sub {
+    display: block;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .statement:empty {
+    display: none;
+  }
+  .assurances {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .assurances li::before {
+    content: '— ';
+    color: var(--rust);
+  }
+  .more-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 999px) {
+    .work {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .plate {
+      min-height: 0;
+      margin-inline: calc(-1 * var(--gutter));
+    }
+    .plate :global(img) {
+      max-height: 70vh;
+    }
+    .sticky {
+      position: static;
+    }
+  }
+</style>

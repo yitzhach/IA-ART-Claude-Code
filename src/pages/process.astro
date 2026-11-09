@@ -1,0 +1,203 @@
+---
+import Base from '~/layouts/Base.astro';
+import ArtImage from '~/components/ArtImage.astro';
+import { getWorks, workUrl, displayTitle } from '~/lib/works';
+import hero from '~/assets/site/process-hero.webp';
+import material from '~/assets/site/process-01-material.webp';
+import cast from '~/assets/site/process-03-cast.webp';
+import lobby from '~/assets/site/object-014.webp';
+
+const works = await getWorks();
+/** Find the catalogue work that a v1 image became, so the stage links to it. */
+const byV1 = (id: string) => works.find((w) => w.data.v1.includes(id));
+const layering = byV1('abstract-11');
+const erosion = byV1('sculptural-5');
+
+const stages = [
+  {
+    name: 'Surface',
+    kicker: 'Building the surface',
+    heading: 'Foundation: preparing the surface.',
+    text: 'Custom wood panels are prepared and layered with gypsum, lime, and cementitious plasters, creating the foundation for each piece and establishing the physical depth of the work.',
+    tags: ['Wood panel', 'Gypsum · lime', 'Cementitious plaster'],
+    image: material,
+    alt: 'Isaac Anderson hanging a finished panel in a bright white interior',
+  },
+  {
+    name: 'Layering',
+    kicker: 'Layering & material',
+    heading: 'A surface that records its own making.',
+    text: 'Successive layers of mineral-based materials are applied, carved, and rebuilt. Each addition and subtraction creates a stratified surface that records the history of its own making.',
+    tags: ['Mineral layers', 'Carved', 'Rebuilt'],
+    image: layering?.data.images[0],
+    alt: 'Layered plaster surface with carved edges and a flash of red pigment',
+    work: layering,
+  },
+  {
+    name: 'Color',
+    kicker: 'Color & light',
+    heading: 'Pigment worked in, with metal catching light.',
+    text: 'Hand-mixed pigments are worked directly into the plaster, while subtle copper or brass gilding catches changing light, revealing new depth and texture as the surface evolves.',
+    tags: ['Hand-mixed pigment', 'Copper gilding', 'Shifts with light'],
+    image: cast,
+    alt: 'A horizon panel where a thin line of metal leaf catches the light',
+  },
+  {
+    name: 'Erosion',
+    kicker: 'Erosion & discovery',
+    heading: 'What’s carved away stays visible.',
+    text: 'The surface is sanded, scraped, and excavated, exposing hidden layers beneath. Rather than covering imperfections, the process embraces them as part of the final composition.',
+    tags: ['Sanded', 'Excavated', 'Imperfection kept'],
+    image: erosion?.data.images[0],
+    alt: 'An excavated plaster surface revealing older layers beneath',
+    work: erosion,
+  },
+  {
+    name: 'Finished',
+    kicker: 'The finished work',
+    heading: 'Architecture, material, and time.',
+    text: 'Each piece becomes a tactile convergence of architecture, material, and time — a contemporary work shaped through traditional techniques and guided by the balance between control and discovery.',
+    tags: ['Traditional technique', 'Contemporary form', 'Control & chance'],
+    image: lobby,
+    alt: 'A finished horizon panel installed in a hotel lobby',
+  },
+];
+---
+
+<Base
+  title="Process"
+  description="Five stages, in order — surface, layering, color, erosion, the finished work. How Isaac Anderson's cement and plaster pieces are made."
+  shareImage={hero}
+>
+  <section class="wrap page-head">
+    <p class="eyebrow">Process</p>
+    <h1 class="display">Process</h1>
+    <p class="lede">
+      Five stages, in order. The first two are mine to control; the last three belong partly to the material. That
+      division is the whole subject of the work.
+    </p>
+  </section>
+
+  <figure class="wrap hero">
+    <ArtImage src={hero} alt="Close-up of a plaster surface with a seam of gold leaf" sizes="(min-width: 1400px) 1312px, 100vw" priority />
+  </figure>
+
+  <ol class="wrap stages">
+    {
+      stages.map((s, i) => (
+        <li class="stage" data-reveal>
+          <div class="text">
+            <span class="num">0{i + 1}</span>
+            <p class="label">{s.kicker}</p>
+            <h2 class="subtitle">{s.heading}</h2>
+            <p class="prose">{s.text}</p>
+            <ul class="tags mono">
+              {s.tags.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+            {s.work && (
+              <a class="link" href={workUrl(s.work)}>
+                See this work — {displayTitle(s.work)} →
+              </a>
+            )}
+          </div>
+          {s.image && (
+            <figure class="pic">
+              <ArtImage src={s.image} alt={s.alt} sizes="(min-width: 900px) 45vw, 100vw" />
+            </figure>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+
+  <section class="section wrap closing">
+    <p class="subtitle">Let’s connect to discuss a current piece, future project, or commissioned work.</p>
+    <div class="actions">
+      <a class="btn btn--ghost" href="/works/">See the works</a>
+      <a class="btn btn--primary" href="/commissions/">Commission a piece</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) clamp(2rem, 1rem + 3vw, 3.5rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .hero :global(img) {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+  }
+  .stages {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--section);
+    display: grid;
+    gap: var(--section);
+  }
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: center;
+  }
+  .stage:nth-child(even) .text {
+    order: 2;
+  }
+  .text {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+  }
+  .num {
+    font: 700 var(--step-4) / 1 var(--font-display);
+    color: var(--rust);
+  }
+  .tags {
+    list-style: none;
+    padding: 0.9rem 0 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .pic :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .closing {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    border-top: 1px solid var(--line);
+    margin-top: var(--section);
+  }
+  .closing .subtitle {
+    max-width: 32rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  @media (max-width: 899px) {
+    .stage {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .stage:nth-child(even) .text {
+      order: 0;
+    }
+    .pic :global(img) {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

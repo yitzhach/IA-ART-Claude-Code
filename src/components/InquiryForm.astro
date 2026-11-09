@@ -1,0 +1,274 @@
+---
+/**
+ * The one inquiry form, used everywhere. Posts to Formspree; with JavaScript it sends
+ * in place and shows a thank-you, without JavaScript it still works as a normal form.
+ */
+import { site } from '~/lib/site';
+
+interface Props {
+  /** general = any question; commission = new piece; purchase = about specific work(s) */
+  variant?: 'general' | 'commission' | 'purchase';
+  /** Title(s) of the work(s) being asked about. */
+  works?: string[];
+  /** Where the form sits, so inquiries can be traced ("Work page — Dawn"). */
+  source: string;
+  heading?: string;
+  intro?: string;
+  id?: string;
+}
+
+const {
+  variant = 'general',
+  works = [],
+  source,
+  heading = variant === 'commission' ? 'Start a commission' : variant === 'purchase' ? 'Ask about this piece' : 'Start a conversation',
+  intro = variant === 'commission'
+    ? 'Tell us about the space and what you have in mind. ' + site.replyPromise
+    : variant === 'purchase'
+      ? 'Ask about price, shipping, installation or seeing it in person. ' + site.replyPromise
+      : 'Questions, project ideas, timelines — send a note and let’s see what we can create. ' + site.replyPromise,
+  id = 'inquire',
+} = Astro.props;
+
+const subject =
+  variant === 'commission'
+    ? 'New commission inquiry'
+    : variant === 'purchase'
+      ? `Purchase inquiry — ${works.join(', ') || 'a work'}`
+      : 'New inquiry';
+const uid = `f-${id}`;
+---
+
+<section class="inquiry" id={id} aria-labelledby={`${uid}-h`}>
+  <div class="intro">
+    <p class="eyebrow">Inquire</p>
+    <h2 class="title" id={`${uid}-h`}>{heading}</h2>
+    <p class="lede">{intro}</p>
+    <ul class="contact mono">
+      <li><a href={site.phone.href}>{site.phone.display}</a></li>
+      <li><a href={site.instagram.href} rel="noopener">Instagram {site.instagram.handle}</a></li>
+      <li>Studios — {site.studios.join(' / ')}</li>
+    </ul>
+  </div>
+
+  <form class="form" action={site.formEndpoint} method="POST" data-inquiry-form>
+    <input type="hidden" name="_subject" value={subject} data-subject />
+    <input type="hidden" name="source" value={source} />
+    {works.length > 0 && <input type="hidden" name="works" value={works.join(', ')} />}
+    <input type="hidden" name="works_list" value="" data-works-list />
+    <label class="trap" aria-hidden="true">Leave empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+
+    <div class="row">
+      <label class="field">
+        <span class="label">Name</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label class="field">
+        <span class="label">Email</span>
+        <input type="email" name="email" required autocomplete="email" inputmode="email" />
+      </label>
+    </div>
+
+    <div class="row">
+      <label class="field">
+        <span class="label">Phone <em>optional</em></span>
+        <input type="tel" name="phone" autocomplete="tel" inputmode="tel" />
+      </label>
+      <label class="field">
+        <span class="label">I am a</span>
+        <select name="role">
+          <option value="">Choose one (optional)</option>
+          <option>Collector</option>
+          <option>Interior designer</option>
+          <option>Architect</option>
+          <option>Art consultant / gallery</option>
+          <option>Hospitality or commercial buyer</option>
+          <option>Other</option>
+        </select>
+      </label>
+    </div>
+
+    {
+      variant === 'commission' && (
+        <>
+          <div class="row">
+            <label class="field">
+              <span class="label">Project type</span>
+              <select name="project_type" required>
+                <option value="">Choose one</option>
+                <option>Private residence</option>
+                <option>Lobby / commercial</option>
+                <option>Hospitality</option>
+                <option>Exterior / landscape</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="label">Timeline</span>
+              <select name="timeline">
+                <option value="">Choose one (optional)</option>
+                <option>Within 3 months</option>
+                <option>3–6 months</option>
+                <option>6+ months</option>
+                <option>Just exploring</option>
+              </select>
+            </label>
+          </div>
+          <div class="row">
+            <label class="field">
+              <span class="label">Project location <em>optional</em></span>
+              <input type="text" name="location" autocomplete="address-level2" />
+            </label>
+            <label class="field">
+              <span class="label">Approximate size <em>optional</em></span>
+              <input type="text" name="size" placeholder="e.g. 60 × 40 in, or wall is 12 ft wide" />
+            </label>
+          </div>
+        </>
+      )
+    }
+
+    <label class="field">
+      <span class="label">{variant === 'commission' ? 'The space and the feeling you’re after' : 'Message'}</span>
+      <textarea name="message" rows="4" required></textarea>
+    </label>
+
+    <div class="actions">
+      <button class="btn btn--primary" type="submit">Send inquiry</button>
+      <p class="status mono" role="status" aria-live="polite" data-status></p>
+    </div>
+  </form>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-inquiry-form]').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = form.querySelector<HTMLElement>('[data-status]')!;
+      const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      button.disabled = true;
+      status.textContent = 'Sending…';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        form.dispatchEvent(new CustomEvent('inquiry:sent', { bubbles: true }));
+        status.textContent = 'Thank you — your note is with the studio. We reply within two working days.';
+        status.dataset.ok = '';
+      } catch {
+        status.textContent = 'That didn’t send. Please try again, or call or email the studio.';
+        delete status.dataset.ok;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  .inquiry {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    padding: clamp(1.5rem, 0.8rem + 3vw, 3.5rem);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+  .intro .title {
+    margin: 0.75rem 0 1rem;
+  }
+  .intro .lede {
+    font-size: 1rem;
+  }
+  .contact {
+    list-style: none;
+    padding: 1.25rem 0 0;
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
+    color: var(--muted);
+  }
+  .contact a:hover {
+    color: var(--rust);
+  }
+  .form {
+    display: grid;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+  .field em {
+    font-style: normal;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 0.7;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 3rem;
+    padding: 0.8rem 0.9rem;
+    font-size: 1rem; /* 16px stops iOS zooming on focus */
+    background: var(--plaster);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--rust);
+    background: #fff;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+  .trap {
+    position: absolute;
+    left: -9999px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .status {
+    color: var(--muted);
+  }
+  .status[data-ok] {
+    color: #2f6b45;
+  }
+  @media (max-width: 899px) {
+    .inquiry {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 559px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .actions .btn {
+      width: 100%;
+    }
+  }
+</style>

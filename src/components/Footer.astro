@@ -1,0 +1,119 @@
+---
+import { site, collectionInfo } from '~/lib/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer section--dark">
+  <div class="wrap grid">
+    <div class="intro">
+      <p class="name">Isaac Anderson</p>
+      <p class="motto">{site.motto}</p>
+      <a class="btn btn--primary" href="/inquire/">Start a conversation</a>
+    </div>
+
+    <nav aria-label="Works">
+      <p class="label">Works</p>
+      <ul>
+        <li><a href="/works/">All works</a></li>
+        <li><a href="/works/?status=available">Available now</a></li>
+        {
+          Object.entries(collectionInfo).map(([key, c]) => (
+            <li>
+              <a href={`/collections/${key}/`}>{c.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav aria-label="Studio">
+      <p class="label">Studio</p>
+      <ul>
+        <li><a href="/commissions/">Commissions</a></li>
+        <li><a href="/process/">Process</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/inquire/">Inquire</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <p class="label">Contact</p>
+      <ul>
+        <li><a href={site.phone.href}>{site.phone.display}</a></li>
+        <li><a href={`mailto:${site.email}`}>Email the studio</a></li>
+        <li><a href={site.instagram.href} rel="noopener">Instagram</a></li>
+        <li class="studios">{site.studios.join(' / ')}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap base mono">
+    <span>© {year} Isaac Anderson Art</span>
+    <span>{site.leadTime} · To-the-trade inquiries welcome</span>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: var(--section) 2rem;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: 3rem 2rem;
+  }
+  .name {
+    font: 700 var(--step-2) / 1 var(--font-display);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .motto {
+    font: italic 300 var(--step-1) var(--font-serif);
+    color: var(--on-dark-muted);
+    margin: 0.75rem 0 2rem;
+  }
+  .label {
+    color: var(--on-dark-muted);
+    margin-bottom: 1rem;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  li a {
+    transition: color 0.2s var(--ease);
+  }
+  li a:hover {
+    color: #e08a5f;
+  }
+  .studios {
+    color: var(--on-dark-muted);
+    font-size: 0.875rem;
+  }
+  .base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-top: var(--section);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-dark);
+    color: var(--on-dark-muted);
+  }
+  @media (max-width: 899px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .intro {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 479px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

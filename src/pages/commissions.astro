@@ -1,0 +1,196 @@
+---
+import Base from '~/layouts/Base.astro';
+import ArtImage from '~/components/ArtImage.astro';
+import InquiryForm from '~/components/InquiryForm.astro';
+import { site } from '~/lib/site';
+import hero from '~/assets/site/hero-macro.webp';
+import lobby from '~/assets/site/object-014.webp';
+
+const steps = [
+  {
+    name: 'Consultation',
+    text: 'A conversation about the site, scale, and use — in person or by video, with reference material from prior work.',
+  },
+  {
+    name: 'Concept',
+    text: 'A direction, material palette, and quote — refined until the form, vision, and budget align.',
+  },
+  {
+    name: 'Fabrication',
+    text: 'Designed, created, and finished in the studio — with progress photos shared as the piece develops.',
+  },
+  { name: 'Install', text: 'Delivered and installed on site throughout the U.S. and internationally.' },
+];
+
+const facts = [
+  { k: 'Lead time', v: '8–12 weeks for most pieces' },
+  { k: 'Settings', v: 'Interior and exterior · residential, hospitality, commercial' },
+  { k: 'Trade', v: 'Architects, designers and art consultants welcome' },
+  { k: 'Scale', v: 'One piece or a full program' },
+];
+---
+
+<Base
+  title="Commissions"
+  description="Site-specific commissions in cement, plaster and steel — developed with architects, designers and private collectors from first sketch to final install. Typical lead time 8–12 weeks."
+  shareImage={hero}
+>
+  <section class="wrap page-head">
+    <p class="eyebrow">Commissions</p>
+    <h1 class="display">Commissions</h1>
+    <p class="lede">
+      Site-specific work in cement, plaster, and steel — developed with architects, designers, and private collectors
+      from first sketch to final install. Interior or exterior, one piece or a full program.
+    </p>
+    <div class="head-actions">
+      <a class="btn btn--primary" href="#inquire">Start a commission</a>
+      <a class="btn btn--ghost" href="/works/">Browse past work</a>
+    </div>
+  </section>
+
+  <section class="wrap intro">
+    <figure>
+      <ArtImage src={hero} alt="A horizon painting hung above a rustic bench beside an olive tree" sizes="(min-width: 900px) 50vw, 100vw" priority />
+      <figcaption class="mono">“Upper Limit” — commission in progress, 2026 (digital mock-up)</figcaption>
+    </figure>
+    <div class="intro-text">
+      <p class="quote">
+        Every commission begins with a conversation about the space, the aesthetic, and the experience the finished piece
+        is meant to create.
+      </p>
+      <p class="prose">
+        Commissioned work can be found in private collections, hospitality, and commercial spaces across the country.
+        Every commission is unique, inspired by its setting and built to endure.
+      </p>
+      <dl class="facts">
+        {
+          facts.map((f) => (
+            <div>
+              <dt class="label">{f.k}</dt>
+              <dd>{f.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="steps-h">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2 class="title" id="steps-h">Four steps, one conversation</h2>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li data-reveal>
+              <span class="num">0{i + 1}</span>
+              <h3>{s.name}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="wrap feature">
+    <ArtImage src={lobby} alt="A dark horizon panel framed above leather sofas in a hotel lobby" sizes="(min-width: 900px) 60vw, 100vw" />
+    <div>
+      <p class="label">Lobby commission · Beverly Hills</p>
+      <p class="subtitle">“Strata” — gypsum, cement, and custom pigments, framed on a wood panel. 48 × 48 × 2.5 in.</p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <InquiryForm variant="commission" source="Commissions page" />
+  </section>
+</Base>
+
+<style>
+  .page-head {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) clamp(2rem, 1rem + 3vw, 4rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .head-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: center;
+  }
+  .intro figcaption {
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .quote {
+    font: italic 400 var(--step-2) / 1.35 var(--font-serif);
+    margin-bottom: 1.5rem;
+  }
+  .facts {
+    margin-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9375rem;
+  }
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+  }
+  .steps li {
+    border-top: 1px solid var(--ink);
+    padding-top: 1.25rem;
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+  .num {
+    font: 700 var(--step-3) / 1 var(--font-display);
+    color: var(--rust);
+  }
+  .steps h3 {
+    font: 400 var(--step-1) var(--font-serif);
+  }
+  .steps p {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+  .feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: end;
+  }
+  .feature .subtitle {
+    margin-top: 0.75rem;
+  }
+  @media (max-width: 899px) {
+    .intro,
+    .feature {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 519px) {
+    .steps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

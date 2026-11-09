@@ -1,0 +1,30 @@
+---
+import Base from '~/layouts/Base.astro';
+---
+
+<Base title="Page not found" noindex>
+  <section class="wrap lost">
+    <p class="eyebrow">404</p>
+    <h1 class="display">Lost in the layers</h1>
+    <p class="lede">That page has moved or never existed. The work is all still here.</p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/works/">See the works</a>
+      <a class="btn btn--ghost" href="/">Home</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    min-height: 60vh;
+    display: grid;
+    align-content: center;
+    gap: 1.5rem;
+    padding-block: var(--section);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

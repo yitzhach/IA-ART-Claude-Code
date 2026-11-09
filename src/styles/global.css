@@ -1,0 +1,151 @@
+/* ==========================================================================
+   Isaac Anderson — design system
+   Change colours, fonts and spacing here; components only use these tokens.
+   ========================================================================== */
+
+:root {
+  /* Palette — plaster, ink, rust */
+  --plaster: #edeae3;      /* page background */
+  --paper: #f5f3ee;        /* cards, panels */
+  --ink: #1b1917;          /* text, dark sections */
+  --ink-2: #4a443c;        /* body text on plaster */
+  --muted: #5c564c;        /* labels, captions */
+  --line: #d6cfc2;         /* hairlines on plaster */
+  --rust: #a34a24;         /* accent, primary actions */
+  --rust-deep: #8a3c1b;    /* accent hover */
+  --on-dark: #edeae3;
+  --on-dark-muted: #a29b8e;
+  --line-dark: #37332e;
+
+  /* Type */
+  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni 72', serif;
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --step--1: 0.8125rem;                              /* 13px — captions */
+  --step-0: 1rem;                                    /* 16px — body */
+  --step-1: clamp(1.125rem, 1.05rem + 0.35vw, 1.3rem);
+  --step-2: clamp(1.4rem, 1.2rem + 0.9vw, 1.9rem);
+  --step-3: clamp(1.9rem, 1.5rem + 1.8vw, 2.9rem);
+  --step-4: clamp(2.6rem, 1.7rem + 4.2vw, 5.4rem);
+  --step-5: clamp(3rem, 1.4rem + 7.4vw, 8rem);       /* page titles */
+
+  /* Space & layout */
+  --gutter: clamp(1.25rem, 0.7rem + 2.6vw, 3rem);
+  --section: clamp(4rem, 2.8rem + 6vw, 8.5rem);
+  --max: 82rem;
+  --measure: 38rem;
+  --nav-h: 4.25rem;
+  --radius: 2px;
+  --shadow: 0 1px 2px rgb(27 25 23 / 0.06), 0 12px 32px -12px rgb(27 25 23 / 0.22);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  color-scheme: light;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  min-height: 100dvh;
+  background: var(--plaster);
+  color: var(--ink);
+  font: 400 var(--step-0) / 1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img, picture, svg, video { display: block; max-width: 100%; height: auto; }
+input, button, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+p, li { text-wrap: pretty; }
+h1, h2, h3 { font-weight: 400; line-height: 1.1; text-wrap: balance; }
+::selection { background: var(--rust); color: var(--paper); }
+:focus-visible { outline: 2px solid var(--rust); outline-offset: 3px; }
+
+/* ---------- Layout helpers ---------- */
+.wrap { width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
+.section { padding-block: var(--section); }
+.section--dark { background: var(--ink); color: var(--on-dark); }
+.stack > * + * { margin-top: var(--stack, 1rem); }
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Type styles ---------- */
+.eyebrow {
+  font: 500 0.6875rem / 1.4 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+.label {
+  font: 500 0.6875rem / 1.5 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mono { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.02em; }
+.display {
+  font: 700 var(--step-5) / 0.92 var(--font-display);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.display .outline { color: transparent; -webkit-text-stroke: 1px currentColor; font-weight: 400; }
+.title { font: 400 var(--step-3) / 1.1 var(--font-serif); letter-spacing: -0.01em; }
+.subtitle { font: italic 300 var(--step-2) / 1.3 var(--font-serif); color: var(--ink-2); }
+.lede { font-size: var(--step-1); line-height: 1.6; color: var(--ink-2); max-width: var(--measure); }
+.prose { color: var(--ink-2); max-width: var(--measure); }
+.prose > * + * { margin-top: 1em; }
+.section--dark .lede, .section--dark .prose { color: var(--on-dark-muted); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.6em;
+  min-height: 3rem; padding: 0.85rem 1.5rem;
+  font: 600 0.75rem / 1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px solid transparent; border-radius: var(--radius);
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.15s var(--ease);
+}
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--rust); color: var(--paper); }
+.btn--primary:hover { background: var(--rust-deep); }
+.btn--ghost { border-color: currentColor; color: var(--ink); }
+.btn--ghost:hover { background: var(--ink); color: var(--plaster); border-color: var(--ink); }
+.section--dark .btn--ghost { color: var(--on-dark); }
+.section--dark .btn--ghost:hover { background: var(--on-dark); color: var(--ink); }
+.link {
+  font: 500 0.75rem / 1.4 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase;
+  border-bottom: 1px solid currentColor; padding-bottom: 2px;
+  transition: color 0.2s var(--ease);
+}
+.link:hover { color: var(--rust); }
+
+/* ---------- Badges ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 0.45em;
+  font: 500 0.625rem / 1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 0.45em 0.7em; border: 1px solid currentColor; border-radius: var(--radius);
+  white-space: nowrap;
+}
+.badge::before { content: ''; width: 0.5em; height: 0.5em; border-radius: 50%; background: currentColor; }
+.badge--available { color: #2f6b45; }
+.badge--reserved { color: #8a6a1b; }
+.badge--sold { color: var(--rust); }
+.badge--commission, .badge--inquire { color: var(--muted); }
+.badge--inquire::before, .badge--commission::before { display: none; }
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] { opacity: 0; translate: 0 1.25rem; transition: opacity 0.9s var(--ease), translate 0.9s var(--ease); }
+  [data-reveal].is-in { opacity: 1; translate: 0 0; }
+}

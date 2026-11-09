@@ -1,0 +1,92 @@
+---
+import ArtImage from './ArtImage.astro';
+import { type Work, workUrl, displayTitle, sizeLabel, collectionsLabel, priceLabel, statusLabel, altText } from '~/lib/works';
+
+interface Props {
+  work: Work;
+  sizes?: string;
+  priority?: boolean;
+}
+const { work, sizes = '(min-width: 1100px) 25vw, (min-width: 700px) 33vw, 50vw', priority = false } = Astro.props;
+const { status } = work.data;
+const meta = [sizeLabel(work), collectionsLabel(work)].filter(Boolean).join(' · ');
+---
+
+<article class="card" data-status={status} data-collections={work.data.collections.join(' ')}>
+  <a href={workUrl(work)} class="frame" aria-label={`${displayTitle(work)}${meta ? `, ${meta}` : ''}`}>
+    <ArtImage src={work.data.images[0]} alt={altText(work)} sizes={sizes} priority={priority} />
+    {status === 'sold' && <span class="dot" title="Sold" />}
+  </a>
+  <div class="caption">
+    <h3 class="title"><a href={workUrl(work)}>{displayTitle(work)}</a></h3>
+    {meta && <p class="meta mono">{meta}</p>}
+    <p class={`state state--${status}`}>{status === 'available' || status === 'inquire' ? priceLabel(work) : statusLabel[status]}</p>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+  .frame {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 5;
+    padding: 9%;
+    background: var(--paper);
+    overflow: hidden;
+    transition: background-color 0.4s var(--ease);
+  }
+  .frame :global(img) {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+    box-shadow: 0 1px 1px rgb(27 25 23 / 0.08), 0 10px 22px -10px rgb(27 25 23 / 0.45);
+    transition: transform 0.6s var(--ease);
+  }
+  .frame:hover {
+    background: #ebe6dc;
+  }
+  .frame:hover :global(img) {
+    transform: scale(1.025);
+  }
+  .dot {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--rust);
+  }
+  .caption {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .title {
+    font: 400 1.125rem / 1.25 var(--font-serif);
+  }
+  .title a:hover {
+    color: var(--rust);
+  }
+  .meta {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .state {
+    font: 500 0.6875rem / 1.6 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .state--available {
+    color: #2f6b45;
+  }
+  .state--sold {
+    color: var(--rust);
+  }
+</style>
