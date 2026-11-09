@@ -103,6 +103,12 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   (model, effort, JSON schema, fallbacks, cache marker), reply filtering and hand-off on refusal/truncation/bad JSON.
   37 tests pass.
 
+### Note — new upload on `main`
+Isaac uploaded three images to `main` overnight (`images/library/8-jbpg-3000.webp`, `final-6003512.webp`,
+`img-6658.webp`). All three were already recovered from the Claude Design project and handled on `v2`: `img-6658`
+is the catalogue work `untitled-figurative-14`; `8-jbpg-3000` duplicates the second photo of `untitled-figurative-13`;
+`final-6003512` is a room photo (unused). `main` itself is left untouched.
+
 ## Morning summary for Isaac
 
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched
