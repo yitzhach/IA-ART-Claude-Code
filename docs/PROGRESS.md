@@ -54,7 +54,7 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   **spec sheet** when printed / saved as PDF.
 - **Untitled works are now unambiguous**: "Untitled (Abstract 04)" in inquiries, page titles, the inquiry list and
   the assistant; every inquiry also records the page it came from.
-- **Tests in the repo**: `npm test` (26 Playwright checks, desktop + phone, ~12 s). **CLAUDE.md** working notes.
+- **Tests in the repo**: `npm test` (Playwright, desktop + phone, ~12 s). **CLAUDE.md** working notes.
 - Content checklist now includes reviewing the assistant's answers and choosing featured works.
 
 ### 2026-11-09 02:00–02:05 ET — session 2 (continued)
@@ -63,6 +63,15 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
 - Fixed: close-up button wasn't keyboard-focusable; header overflowed on 320px phones once the list had items
   (new regression test — 28 tests now).
 - Checked layouts at iPad portrait/landscape, landscape phone, 1280×720 and 1920×1080 — no overflow.
+
+### 2026-11-09 02:05–02:12 ET — session 2 (continued)
+- **Visual tour** for Isaac published (private): https://claude.ai/artifact/X4aVmg3vS3rNiop8ibPZVP
+- **Every work described** from its photo (`alt:` — palette, composition, surface): better alt text, better Google
+  Images, and Ask AI can now find pieces by colour or motif ("anything blue?", "a piece with a tree").
+- FAQ answers also list matching works when the question names them.
+- Found and merged one more duplicate (`untitled-abstract-06` = Green Horizon) — **46 works**. Flagged a possible
+  duplicate (`untitled-abstract-04` / `untitled-sculptural-09`) for Isaac.
+- 30 tests pass.
 
 ## Morning summary for Isaac
 
