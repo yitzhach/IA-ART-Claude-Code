@@ -1,0 +1,245 @@
+---
+/** "View on your wall" button + full-screen viewer for one work. Needs the work's width and height. */
+import { getImage } from 'astro:assets';
+import { type Work, displayTitle } from '~/lib/works';
+
+interface Props {
+  work: Work;
+}
+const { work } = Astro.props;
+const { width, height } = work.data;
+const art = width && height ? await getImage({ src: work.data.images[0], width: 1280, format: 'webp', quality: 82 }) : null;
+const title = displayTitle(work);
+---
+
+{
+  art && (
+    <>
+      <a class="btn btn--ghost wall-btn" href="#wall-view" data-wall-view>
+        View on your wall
+      </a>
+      <dialog class="wall" aria-labelledby="wall-title" data-wall data-src={art.src} data-title={title} data-w={width} data-h={height}>
+        <div class="wall-inner">
+          <header class="wall-head">
+            <p class="wall-title" id="wall-title">
+              {title} <span class="mono">on your wall</span>
+            </p>
+            <button class="wall-close" type="button" data-wall-close aria-label="Close">
+              ×
+            </button>
+          </header>
+
+          <div class="wall-modes" role="group" aria-label="Background">
+            <button type="button" data-wall-mode="sample" aria-pressed="true">Sample room</button>
+            <button type="button" data-wall-mode="photo" aria-pressed="false">My wall photo</button>
+          </div>
+
+          <div class="wall-stage">
+            <canvas data-wall-canvas tabindex="0" aria-label={`${title} shown on a wall at true size. Use arrow keys to move it.`} />
+          </div>
+
+          <div class="wall-photo" data-wall-photo-controls hidden>
+            <label class="btn btn--primary wall-file">
+              Take or choose a photo
+              <input type="file" accept="image/*" capture="environment" data-wall-file />
+            </label>
+            <label class="wall-range">
+              <span class="label">Wall width in photo</span>
+              <input type="range" min="4" max="30" step="0.5" value="10" data-wall-width />
+              <output class="mono" data-wall-width-out>10 ft</output>
+            </label>
+          </div>
+
+          <p class="wall-hint" data-wall-hint />
+
+          <div class="wall-actions">
+            <button class="btn btn--ghost" type="button" data-wall-save>
+              Save image
+            </button>
+            <a class="btn btn--primary" href="#inquire" data-wall-inquire>
+              Inquire about this piece
+            </a>
+          </div>
+          <p class="wall-note mono">Your photo stays on your device — nothing is uploaded.</p>
+        </div>
+      </dialog>
+    </>
+  )
+}
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-wall]');
+  if (dialog) {
+    let ready = false;
+    const open = async () => {
+      if (!dialog.open) dialog.showModal();
+      if (!ready) {
+        ready = true;
+        const { init } = await import('~/scripts/wall-view');
+        init(dialog, {
+          src: dialog.dataset.src!,
+          title: dialog.dataset.title!,
+          widthIn: Number(dialog.dataset.w),
+          heightIn: Number(dialog.dataset.h),
+        });
+      }
+    };
+    const close = () => {
+      dialog.close();
+      if (location.hash === '#wall-view') history.replaceState(null, '', location.pathname + location.search);
+    };
+    document.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest('a[href="#wall-view"]');
+      if (a) {
+        e.preventDefault();
+        history.replaceState(null, '', '#wall-view');
+        open();
+      }
+    });
+    addEventListener('hashchange', () => location.hash === '#wall-view' && open());
+    if (location.hash === '#wall-view') open();
+    dialog.querySelector('[data-wall-close]')!.addEventListener('click', close);
+    dialog.querySelector('[data-wall-inquire]')!.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => {
+      if (location.hash === '#wall-view') history.replaceState(null, '', location.pathname + location.search);
+    });
+  }
+</script>
+
+<style>
+  .wall {
+    border: 0;
+    padding: 0;
+    margin: auto; /* the global reset removes the dialog's default centring */
+    width: min(64rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 6px;
+    box-shadow: 0 30px 80px -20px rgb(27 25 23 / 0.55);
+  }
+  .wall::backdrop {
+    background: rgb(27 25 23 / 0.6);
+  }
+  .wall-inner {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  .wall-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .wall-title {
+    font: 400 var(--step-1) var(--font-serif);
+  }
+  .wall-title .mono {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-left: 0.4rem;
+  }
+  .wall-close {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    background: none;
+    font-size: 1.6rem;
+    color: var(--muted);
+  }
+  .wall-modes {
+    display: inline-flex;
+    justify-self: start;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .wall-modes button {
+    min-height: 2.5rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    font: 500 0.8125rem var(--font-sans);
+  }
+  .wall-modes [aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--plaster);
+  }
+  .wall-stage {
+    display: grid;
+    place-items: center;
+    background: #e8e3da;
+  }
+  .wall-stage canvas {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(62dvh, 40rem);
+    touch-action: none;
+    cursor: grab;
+  }
+  .wall-stage canvas:active {
+    cursor: grabbing;
+  }
+  .wall-photo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .wall-photo[hidden] {
+    display: none;
+  }
+  .wall-file input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+  .wall-file:focus-within {
+    outline: 2px solid var(--rust);
+    outline-offset: 3px;
+  }
+  .wall-range {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1 1 16rem;
+  }
+  .wall-range input {
+    flex: 1;
+    accent-color: var(--rust);
+  }
+  .wall-hint {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+  .wall-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .wall-note {
+    color: var(--muted);
+    font-size: 0.6875rem;
+  }
+  @media (max-width: 559px) {
+    .wall {
+      width: 100vw;
+      max-width: none;
+      max-height: none;
+      height: 100dvh;
+      margin: 0;
+      border-radius: 0;
+    }
+    .wall-inner {
+      padding: calc(1rem + env(safe-area-inset-top)) 1rem calc(1rem + env(safe-area-inset-bottom));
+    }
+    .wall-actions .btn {
+      flex: 1 1 100%;
+    }
+  }
+</style>

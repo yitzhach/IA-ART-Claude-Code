@@ -40,6 +40,7 @@ export async function init(dialog: HTMLDialogElement) {
   const form = dialog.querySelector<HTMLFormElement>('[data-ask-form]')!;
   const input = dialog.querySelector<HTMLInputElement>('[data-ask-input]')!;
   const currentWork = document.querySelector<HTMLElement>('[data-current-work]')?.dataset.currentWork;
+  const hasWallView = Boolean(document.querySelector('[data-wall-view]'));
 
   let kb: Knowledge = { faq: [], works: [] };
   try {
@@ -182,7 +183,7 @@ export async function init(dialog: HTMLDialogElement) {
         const avail = kb.works.filter((w) => w.status === 'available');
         if (avail.length) msg.append(workCards(avail));
       }
-      if (hit.id === 'wall' && currentWork) {
+      if (hit.id === 'wall' && hasWallView) {
         msg.append(links([{ label: 'View this piece on your wall', href: '#wall-view' }]));
       } else if (hit.links?.length) {
         msg.append(links(hit.links));
@@ -214,7 +215,7 @@ export async function init(dialog: HTMLDialogElement) {
       const items: { label: string; href?: string }[] = [];
       if (acts.has('available')) items.push({ label: 'Available works', href: '/works/?status=available' });
       if (acts.has('commission')) items.push({ label: 'Start a commission', href: '/commissions/#inquire' });
-      if (acts.has('wall') && currentWork) items.push({ label: 'View on your wall', href: '#wall-view' });
+      if (acts.has('wall') && hasWallView) items.push({ label: 'View on your wall', href: '#wall-view' });
       if (acts.has('inquire')) items.push({ label: 'Ask the studio', href: handoffHref(q) });
       if (items.length) msg.append(links(items));
       history.push({ q, a: reply.answer });

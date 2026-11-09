@@ -5,6 +5,7 @@ import ArtImage from '~/components/ArtImage.astro';
 import WorkGrid from '~/components/WorkGrid.astro';
 import InquiryForm from '~/components/InquiryForm.astro';
 import AddToList from '~/components/AddToList.astro';
+import WallView from '~/components/WallView.astro';
 import { site, collectionInfo } from '~/lib/site';
 import {
   getWorks,
@@ -126,6 +127,7 @@ const jsonLd = {
               <AddToList work={work} />
             </>
           )}
+          <WallView work={work} />
         </div>
 
         {
