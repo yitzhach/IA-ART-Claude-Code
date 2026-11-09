@@ -60,7 +60,7 @@
 - [x] Fold the designer's Available page in as a filtered view (`/works/?status=available`)
 
 ### Phase 3 — Ask AI
-- [x] `src/lib/faq.ts` — commission process, lead times, shipping, install, care, materials, pricing guidance
+- [x] `src/content/faq.yaml` — commission process, lead times, shipping, install, care, materials, pricing guidance
 - [x] Panel UI (keyboard + screen reader friendly), instant FAQ matching with no network call
 - [x] `/api/ask` Worker: answers grounded in catalogue + FAQ, cites works with links, hands off to inquiry
 - [x] Guardrails: never invent prices or availability; offer to connect with Isaac

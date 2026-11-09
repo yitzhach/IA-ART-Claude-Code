@@ -105,7 +105,7 @@ of what's needed from you.
 
 **What only you can supply** — `docs/CONTENT-NEEDED.md` lists it: titles, sizes and years for most works,
 prices (or keep "Price on request"), the About-page biography and exhibitions, approval of two drafted collection
-descriptions, and the FAQ answers in `src/lib/faq.ts`.
+descriptions, and the FAQ answers in `src/content/faq.yaml`.
 
 **Edit it yourself.** Once deployed, `/admin/` is a visual editor for prices, status, photos and new works —
 setup is one GitHub token (README › The web editor).
