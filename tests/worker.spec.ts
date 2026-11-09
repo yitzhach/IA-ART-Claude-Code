@@ -64,6 +64,16 @@ test.describe('Ask AI worker', () => {
     expect(req.system.at(-1).cache_control).toEqual({ type: 'ephemeral' });
   });
 
+  test('on Haiku, askClaude sends no fallback (Haiku has none)', async () => {
+    const { client, calls } = fakeClient({ answer: 'Yes.', works: [], actions: [] });
+    await askClaude(client, kb(), input, { model: 'claude-haiku-5-5', effort: 'low' });
+    const req = calls[0] as any;
+    expect(req.model).toBe('claude-haiku-5-5');
+    expect(req.fallbacks).toBeUndefined();
+    expect(req.betas).toBeUndefined();
+    expect(req.output_config.effort).toBe('low');
+  });
+
   test('refusals, truncation and malformed replies hand off to the studio', async () => {
     for (const [reply, stop] of [[{ answer: 'x', works: [], actions: [] }, 'refusal'], [{ answer: 'x' }, 'max_tokens'], ['not json', 'end_turn']] as const) {
       const { client } = fakeClient(reply as object, stop);

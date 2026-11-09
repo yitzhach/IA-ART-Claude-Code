@@ -107,11 +107,15 @@ export async function askClaude(
   input: AskInput,
   opts: { model: string; effort: 'low' | 'medium' | 'high' },
 ): Promise<AskReply> {
+  // A declined question is re-run on a fallback model server-side. Haiku has no server-side fallback
+  // (Anthropic says not to send the parameter), so a Haiku refusal simply hands off to the studio.
+  const fallback = opts.model.startsWith('claude-haiku')
+    ? {}
+    : { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' as const };
   const response = await client.beta.messages.create({
     model: opts.model,
     max_tokens: 4096,
-    betas: ['server-side-fallback-2026-07-01'],
-    fallbacks: 'default',
+    ...fallback,
     output_config: { effort: opts.effort, format: { type: 'json_schema', schema: SCHEMA } },
     system: [
       { type: 'text', text: RULES },
