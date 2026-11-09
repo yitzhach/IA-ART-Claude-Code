@@ -120,6 +120,7 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': [artwork, breadcrum
                 alt={i === 0 ? altText(work) : `${title} — view ${i + 1}`}
                 sizes={plateSizes(img)}
                 priority={i === 0}
+                transition={i === 0 ? work.id : undefined}
               />
             </button>
           </figure>

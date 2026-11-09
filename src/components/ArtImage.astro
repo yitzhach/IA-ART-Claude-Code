@@ -14,9 +14,11 @@ interface Props {
   /** true for the main image above the fold (loads first). */
   priority?: boolean;
   class?: string;
+  /** Work slug: lets the image glide between pages (see src/pages/transitions.css.ts). */
+  transition?: string;
 }
 
-const { src, alt, sizes, priority = false, class: className } = Astro.props;
+const { src, alt, sizes, priority = false, class: className, transition } = Astro.props;
 const widths = [240, 320, 480, 640, 800, 960, 1280, 1600, 2000, 2400].filter((w) => w <= src.width);
 if (!widths.length || widths[widths.length - 1] < src.width) widths.push(src.width);
 ---
@@ -32,4 +34,5 @@ if (!widths.length || widths[widths.length - 1] < src.width) widths.push(src.wid
   fetchpriority={priority ? 'high' : 'auto'}
   decoding={priority ? 'sync' : 'async'}
   class={className}
+  data-vt={transition}
 />

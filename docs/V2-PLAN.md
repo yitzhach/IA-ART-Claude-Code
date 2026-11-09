@@ -80,6 +80,7 @@
 - [x] Purchase intent on work-page forms: ask a question / buy / hold for a client / see it in person
 - [x] "More like this": related works ranked by shared palette and motifs, available works first on ties
 - [x] Breadcrumb structured data on work pages
+- [x] Page transitions: a card's artwork glides into its page (View Transitions, no JavaScript)
 - [x] Shows & exhibitions data (`src/content/shows.yaml`), editable in the web editor
 - [x] Assistant answers (`src/content/faq.yaml`) editable in the web editor
 - [ ] When Isaac supplies content: titles/sizes, prices, featured works, bio, shows (see CONTENT-NEEDED)

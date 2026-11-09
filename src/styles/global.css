@@ -162,3 +162,11 @@ h1, h2, h3 { font-weight: 400; line-height: 1.1; text-wrap: balance; }
     scroll-behavior: auto !important;
   }
 }
+
+/* Page transitions (Chrome, Edge, Safari 18.2+): pages crossfade and an artwork's image glides from
+   its card into the work page. Names come from /transitions.css. Off for reduced-motion users. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .header { view-transition-name: site-header; }
+  ::view-transition-group(*) { animation-duration: 0.45s; animation-timing-function: var(--ease); }
+}

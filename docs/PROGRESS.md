@@ -108,6 +108,10 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
 - "More like this" ranks related works by shared palette and motifs.
 - Breadcrumb structured data on work pages. Plan Phase 6 added; remaining items need Isaac's content or go-live.
 
+- **Page transitions** (cross-document View Transitions, no JS): pages crossfade and a card's artwork glides into
+  the work page. Names come from a generated `/transitions.css` (inline styles are blocked by the CSP); checked for
+  duplicate names on every page; off for reduced-motion users; other browsers navigate normally.
+
 ### Note — new upload on `main`
 Isaac uploaded three images to `main` overnight (`images/library/8-jbpg-3000.webp`, `final-6003512.webp`,
 `img-6658.webp`). All three were already recovered from the Claude Design project and handled on `v2`: `img-6658`

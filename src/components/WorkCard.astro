@@ -14,7 +14,7 @@ const meta = [sizeLabel(work), collectionsLabel(work)].filter(Boolean).join(' ·
 
 <article class="card" data-status={status} data-collections={work.data.collections.join(' ')}>
   <a href={workUrl(work)} class="frame" aria-label={`${refTitle(work)}${meta ? `, ${meta}` : ''}`}>
-    <ArtImage src={work.data.images[0]} alt={altText(work)} sizes={sizes} priority={priority} />
+    <ArtImage src={work.data.images[0]} alt={altText(work)} sizes={sizes} priority={priority} transition={work.id} />
     {status === 'sold' && <span class="dot" title="Sold" />}
   </a>
   <div class="caption">
