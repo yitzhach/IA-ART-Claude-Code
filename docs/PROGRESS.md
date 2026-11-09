@@ -32,3 +32,34 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   `wrangler.jsonc` (deploys to a separate preview Worker first), `_headers`.
 - QA: every page checked at 1440px desktop and iPhone 13 — no overflow, broken images, missing alt text or placeholders.
 - Next: Ask AI panel (instant FAQ, then optional Claude-powered answers via a Worker), wall view, analytics.
+
+### 2026-11-09 01:40–01:55 ET — session 2 (continued)
+- **Ask AI** on every page: instant FAQ answers (`src/lib/faq.ts`) and catalogue search on the device; other
+  questions go to `POST /api/ask` (Cloudflare Worker → Claude, grounded in `/assistant/knowledge.json`); without an
+  API key or on any error, a one-tap hand-off to the studio with the question prefilled. Tested end to end in
+  workerd against a mock Claude API, plus a phone-viewport browser test (10/10).
+- **View on your wall**: true-scale preview in a sample room (84-in sofa) or on the visitor's own photo; drag,
+  save/share. Never uploads the photo. Opens from work pages, Ask AI, or `#wall-view`.
+- **Inquiry list** (save several works, one inquiry) — tested end to end (11/11).
+- **Art fair page** `/fair/` + printable booth card `/fair/print/` (QR code verified to decode).
+- **301 redirects** from every v1 address (incl. the designer's `/available.html`).
+- **Recovered** the 9 images missing from the GitHub upload: 3 sharper work photos, 1 new work
+  (`untitled-figurative-14`), an art-fair booth photo.
+- **Accessibility**: axe-core WCAG 2.1 AA — 0 violations on all page types.
+- **Fonts self-hosted** — no third-party requests at all.
+- Speed on a throttled phone (slow 4G): Home main image 9.7 s → 0.8 s; Abstract fully loaded 55 s → 8.6 s.
+
+## Morning summary for Isaac
+
+**Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched
+and still matches the live site. Nothing has been deployed.
+
+**See it.** `npm install && npm run dev`, then open http://localhost:4321 — or deploy a private preview
+(README › Deploying, step 1); the live site isn't affected until you move the domain.
+
+**What only you can supply** — `docs/CONTENT-NEEDED.md` lists it: titles, sizes and years for most works,
+prices (or keep "Price on request"), the About-page biography and exhibitions, approval of two drafted collection
+descriptions, and the FAQ answers in `src/lib/faq.ts`.
+
+**Decisions waiting on you** — `docs/V2-PLAN.md` › Decisions: show prices?; "Buy now" via Stripe?; AI on
+(add an Anthropic API key) and which model; public email address.
