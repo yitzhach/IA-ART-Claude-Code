@@ -16,12 +16,9 @@ const works = await getWorks();
 const featured = (() => {
   const picked = works.filter((w) => w.data.featured);
   if (picked.length) return picked.slice(0, 8);
-  // Until works are marked `featured: true`, show available pieces first, then titled ones.
-  const rank = (s: string) => (s === 'available' ? 0 : s === 'inquire' ? 1 : 2);
-  return [...works]
-    .filter((w) => w.data.title)
-    .sort((a, b) => rank(a.data.status) - rank(b.data.status))
-    .slice(0, 8);
+  // Until works are marked `featured: true`: everything for sale first (titled or not), then titled pieces.
+  const rank = (w: (typeof works)[number]) => (w.data.status === 'available' ? 0 : w.data.title ? 1 : 2);
+  return [...works].sort((a, b) => rank(a) - rank(b)).slice(0, 8);
 })();
 const availableCount = works.filter((w) => w.data.status === 'available').length;
 const nextShow = (await getShows()).upcoming[0];
