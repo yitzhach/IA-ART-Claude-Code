@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "isaacandersonart.com \u2014 sculptural art in cement, plaster and steel by Isaac Anderson.",
+  "description": "isaacandersonart.com — sculptural art in cement, plaster and steel by Isaac Anderson.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -23,11 +23,11 @@
     "@fontsource-variable/bodoni-moda": "5.3.0",
     "@fontsource-variable/newsreader": "5.3.0",
     "@fontsource/ibm-plex-mono": "5.3.0",
-    "astro": "5.18.2",
-    "sharp": "0.34.5"
+    "astro": "7.4.7",
+    "sharp": "0.35.5"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.4",
+    "@astrojs/check": "0.9.12",
     "@cloudflare/workers-types": "5.20261109.1",
     "@playwright/test": "1.63.0",
     "@types/qrcode": "1.5.6",

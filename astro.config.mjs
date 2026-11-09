@@ -7,6 +7,9 @@ export default defineConfig({
   // CSS and JS are always separate files (never inlined) so the Content-Security-Policy in
   // public/_headers can allow only the site's own code.
   build: { format: 'directory', inlineStylesheets: 'never' },
+  // Astro 7 changed the default to 'jsx', which drops line breaks between text and links; keep the
+  // classic behaviour (collapse runs of whitespace to one space) so wording renders as written.
+  compressHTML: true,
   vite: { build: { assetsInlineLimit: 0 } },
   image: {
     // Widths generated for srcsets: small cards on phones get 240–320px, retina desktop up to 2400px.

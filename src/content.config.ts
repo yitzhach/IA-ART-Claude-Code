@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { file, glob } from 'astro/loaders';
 
 /**
@@ -34,7 +35,7 @@ const works = defineCollection({
       /** Price in US dollars. Leave out to show "Price on request". */
       price: z.number().positive().optional(),
       /** Stripe Payment Link (or any checkout URL). Adds a "Buy now" button when status is available. */
-      buyLink: z.string().url().optional(),
+      buyLink: z.url().optional(),
       /** Inches. Width × height as hung; depth optional. */
       width: z.number().positive().optional(),
       height: z.number().positive().optional(),
@@ -75,7 +76,7 @@ const shows = defineCollection({
     city: z.string(),
     start: z.coerce.date(),
     end: z.coerce.date().optional(),
-    url: z.string().url().optional(),
+    url: z.url().optional(),
     kind: z.enum(['fair', 'exhibition', 'open-studio']).default('fair'),
   }),
 });
