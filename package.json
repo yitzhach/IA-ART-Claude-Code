@@ -8,18 +8,23 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check",
-    "content:report": "node scripts/content-report.mjs"
+    "check": "astro check && tsc -p worker",
+    "content:report": "node scripts/content-report.mjs",
+    "deploy": "astro build && wrangler deploy",
+    "dev:worker": "astro build && wrangler dev"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "1.6.0",
     "astro": "5.18.2",
     "sharp": "0.34.5"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.4",
-    "typescript": "5.9.3"
+    "@cloudflare/workers-types": "5.20261109.1",
+    "typescript": "5.9.3",
+    "wrangler": "4.158.0"
   }
 }

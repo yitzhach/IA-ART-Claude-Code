@@ -1,0 +1,348 @@
+---
+/**
+ * "Ask AI" — floating button + panel on every page. The button is plain HTML; the assistant's
+ * code and knowledge load only when someone opens it, so it costs nothing on page load.
+ */
+---
+
+<button class="ask-launch" type="button" data-ask-open aria-haspopup="dialog">
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+    <path
+      d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 2.5zm7 12l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9.9-2.6z"
+      fill="currentColor"></path>
+  </svg>
+  <span>Ask AI</span>
+</button>
+
+<dialog class="ask" data-ask aria-labelledby="ask-title">
+  <div class="ask-inner">
+    <header class="ask-head">
+      <div>
+        <p class="ask-title" id="ask-title">Ask the studio</p>
+        <p class="ask-sub mono">Instant answers · AI-assisted</p>
+      </div>
+      <button class="ask-close" type="button" data-ask-close aria-label="Close">×</button>
+    </header>
+
+    <div class="ask-log" data-ask-log role="log" aria-live="polite" aria-relevant="additions"></div>
+
+    <div class="ask-chips" data-ask-chips></div>
+
+    <form class="ask-form" data-ask-form>
+      <label class="visually-hidden" for="ask-input">Your question</label>
+      <input
+        id="ask-input"
+        name="q"
+        type="text"
+        autocomplete="off"
+        maxlength="500"
+        placeholder="Ask about a piece, prices, commissions…"
+        data-ask-input
+        required
+      />
+      <button class="ask-send" type="submit" aria-label="Send">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+    </form>
+    <p class="ask-note">AI answers can be imperfect — the studio confirms prices and availability.</p>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-ask]')!;
+  const launch = document.querySelector<HTMLButtonElement>('[data-ask-open]')!;
+  let ready: Promise<unknown> | null = null;
+
+  const open = (question?: string) => {
+    if (!dialog.open) dialog.showModal();
+    ready ??= import('~/scripts/ask').then((m) => m.init(dialog));
+    ready.then(() => question && dialog.dispatchEvent(new CustomEvent('ask:question', { detail: question })));
+  };
+
+  launch.addEventListener('click', () => open());
+  dialog.querySelector('[data-ask-close]')!.addEventListener('click', () => dialog.close());
+  // Click on the backdrop closes the panel.
+  dialog.addEventListener('click', (e) => e.target === dialog && dialog.close());
+  // Any element with data-ask-question="…" opens the assistant with that question.
+  document.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest<HTMLElement>('[data-ask-question]');
+    if (t) {
+      e.preventDefault();
+      open(t.dataset.askQuestion);
+    }
+  });
+</script>
+
+<style>
+  .ask-launch {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.15rem 0.75rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--plaster);
+    font: 600 0.75rem / 1 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 10px 30px -10px rgb(27 25 23 / 0.6);
+    transition: transform 0.2s var(--ease), background-color 0.2s var(--ease);
+  }
+  .ask-launch:hover {
+    background: var(--rust);
+    transform: translateY(-2px);
+  }
+  .ask-launch svg {
+    color: #e08a5f;
+  }
+  .ask-launch:hover svg {
+    color: var(--paper);
+  }
+
+  .ask {
+    border: 0;
+    padding: 0;
+    margin: auto 1.25rem 1.25rem auto;
+    width: min(26rem, calc(100vw - 2.5rem));
+    height: min(40rem, calc(100dvh - 2.5rem));
+    max-height: none;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 30px 80px -20px rgb(27 25 23 / 0.55);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .ask::backdrop {
+    background: rgb(27 25 23 / 0.35);
+  }
+  .ask[open] {
+    animation: ask-in 0.28s var(--ease);
+  }
+  @keyframes ask-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+  .ask-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .ask-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .ask-title {
+    font: 400 1.35rem / 1.1 var(--font-serif);
+  }
+  .ask-sub {
+    color: var(--muted);
+    font-size: 0.6875rem;
+    margin-top: 0.25rem;
+  }
+  .ask-close {
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: -0.5rem -0.6rem 0 0;
+    border: 0;
+    background: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--muted);
+  }
+  .ask-close:hover {
+    color: var(--rust);
+  }
+  .ask-log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overscroll-behavior: contain;
+  }
+  .ask-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 1.25rem 0.75rem;
+  }
+  .ask-chips:empty {
+    display: none;
+  }
+  .ask-form {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem 0.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .ask-form input {
+    flex: 1;
+    min-width: 0;
+    min-height: 3rem;
+    padding: 0.75rem 0.9rem;
+    font-size: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--plaster);
+  }
+  .ask-form input:focus {
+    outline: none;
+    border-color: var(--rust);
+    background: #fff;
+  }
+  .ask-send {
+    width: 3rem;
+    height: 3rem;
+    flex: none;
+    border: 0;
+    border-radius: 50%;
+    background: var(--rust);
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+  }
+  .ask-send:hover {
+    background: var(--rust-deep);
+  }
+  .ask-note {
+    padding: 0 1.25rem calc(0.9rem + env(safe-area-inset-bottom));
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 559px) {
+    .ask {
+      margin: 0;
+      width: 100vw;
+      height: 100dvh;
+      max-width: none;
+      border-radius: 0;
+    }
+    .ask-head {
+      padding-top: calc(1.1rem + env(safe-area-inset-top));
+    }
+    .ask-launch {
+      padding: 0.75rem 1rem;
+    }
+  }
+  @media print {
+    .ask-launch {
+      display: none;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Messages are created by src/scripts/ask.ts, so these styles are global (scoped under .ask). */
+  .ask .msg {
+    max-width: 88%;
+    padding: 0.8rem 1rem;
+    border-radius: 14px;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  .ask .msg p + p {
+    margin-top: 0.6em;
+  }
+  .ask .msg--user {
+    align-self: flex-end;
+    background: var(--ink);
+    color: var(--plaster);
+    border-bottom-right-radius: 4px;
+  }
+  .ask .msg--bot {
+    align-self: flex-start;
+    background: var(--plaster);
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 4px;
+  }
+  .ask .msg.is-thinking {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .ask .chip {
+    padding: 0.55rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--plaster);
+    font: 500 0.8125rem / 1.2 var(--font-sans);
+    text-align: left;
+  }
+  .ask .chip:hover {
+    border-color: var(--rust);
+    color: var(--rust);
+  }
+  .ask .msg-works {
+    list-style: none;
+    padding: 0;
+    margin-top: 0.75rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .ask .msg-works a {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.4rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .ask .msg-works a:hover {
+    border-color: var(--rust);
+  }
+  .ask .msg-works img {
+    width: 3.25rem;
+    height: 3.25rem;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .ask .msg-work-meta {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .ask .msg-work-meta strong {
+    font: 400 1rem / 1.2 var(--font-serif);
+  }
+  .ask .msg-work-meta span {
+    font: 400 0.6875rem / 1.3 var(--font-mono);
+    color: var(--muted);
+  }
+  .ask .msg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .ask .msg-action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--rust);
+    border-radius: 999px;
+    background: none;
+    color: var(--rust);
+    font: 600 0.6875rem / 1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .ask .msg-action:hover {
+    background: var(--rust);
+    color: var(--paper);
+  }
+</style>

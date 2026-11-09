@@ -141,6 +141,11 @@ const uid = `f-${id}`;
 </section>
 
 <script>
+  // A question handed over from the Ask AI panel (/inquire/?q=…) prefills the first message box.
+  const handed = new URLSearchParams(location.search).get('q');
+  const firstMessage = document.querySelector<HTMLTextAreaElement>('[data-inquiry-form] textarea[name="message"]');
+  if (handed && firstMessage && !firstMessage.value) firstMessage.value = handed.slice(0, 1000);
+
   document.querySelectorAll<HTMLFormElement>('[data-inquiry-form]').forEach((form) => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();

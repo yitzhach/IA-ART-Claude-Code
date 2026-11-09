@@ -4,6 +4,7 @@ import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Header from '~/components/Header.astro';
 import Footer from '~/components/Footer.astro';
+import AskAI from '~/components/AskAI.astro';
 import { site } from '~/lib/site';
 import defaultShare from '~/assets/site/hero-macro.webp';
 
@@ -70,6 +71,7 @@ const ogUrl = new URL(og.src, site.url).href;
       <slot />
     </main>
     <Footer />
+    <AskAI />
     <script>
       import '~/scripts/reveal';
     </script>
