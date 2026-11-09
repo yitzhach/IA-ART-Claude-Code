@@ -1,0 +1,5 @@
+---
+import { getCollection } from 'astro:content';
+const works = await getCollection('works');
+---
+<p>{works.length} works</p>
