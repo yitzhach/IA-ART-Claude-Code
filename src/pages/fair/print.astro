@@ -3,6 +3,10 @@
  * Printable booth card with a QR code to /fair/. Print it from the browser (letter or A4);
  * not linked from the site and hidden from search engines.
  */
+import '@fontsource-variable/bodoni-moda/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource-variable/archivo';
+import '@fontsource/ibm-plex-mono/500.css';
 import QRCode from 'qrcode';
 import { site } from '~/lib/site';
 
@@ -22,12 +26,6 @@ const svg = await QRCode.toString(target, {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Booth card — Isaac Anderson Art</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Bodoni+Moda:opsz,wght@6..96,700&family=IBM+Plex+Mono:wght@500&family=Newsreader:ital,opsz,wght@1,6..72,300&display=swap"
-    />
   </head>
   <body>
     <main class="card">
@@ -51,7 +49,7 @@ const svg = await QRCode.toString(target, {
     margin: 0;
     background: #edeae3;
     color: #1b1917;
-    font-family: 'Archivo', system-ui, sans-serif;
+    font-family: 'Archivo Variable', system-ui, sans-serif;
     display: grid;
     place-items: center;
     min-height: 100vh;
@@ -78,13 +76,13 @@ const svg = await QRCode.toString(target, {
   }
   h1 {
     margin: 0;
-    font: 700 46px/1 'Bodoni Moda', serif;
+    font: 700 46px/1 'Bodoni Moda Variable', serif;
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
   .motto {
     margin: 0;
-    font: italic 300 20px 'Newsreader', serif;
+    font: italic 300 20px 'Newsreader Variable', serif;
     color: #4a443c;
   }
   .qr {
@@ -99,7 +97,7 @@ const svg = await QRCode.toString(target, {
   }
   .cta {
     margin: 0;
-    font: 500 18px/1.3 'Archivo', sans-serif;
+    font: 500 18px/1.3 'Archivo Variable', sans-serif;
   }
   .url {
     margin: 0;
@@ -111,7 +109,7 @@ const svg = await QRCode.toString(target, {
     color: #5c564c;
   }
   .hint {
-    font: 400 13px 'Archivo', sans-serif;
+    font: 400 13px 'Archivo Variable', sans-serif;
     color: #5c564c;
   }
   @media print {

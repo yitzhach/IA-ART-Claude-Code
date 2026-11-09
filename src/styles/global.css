@@ -18,9 +18,9 @@
   --line-dark: #37332e;
 
   /* Type */
-  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni 72', serif;
-  --font-serif: 'Newsreader', Georgia, serif;
-  --font-sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Bodoni Moda Variable', 'Bodoni Moda', 'Didot', 'Bodoni 72', serif;
+  --font-serif: 'Newsreader Variable', 'Newsreader', Georgia, serif;
+  --font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --step--1: 0.8125rem;                              /* 13px — captions */
