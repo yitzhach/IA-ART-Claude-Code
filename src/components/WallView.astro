@@ -1,7 +1,7 @@
 ---
 /** "View on your wall" button + full-screen viewer for one work. Needs the work's width and height. */
 import { getImage } from 'astro:assets';
-import { type Work, displayTitle } from '~/lib/works';
+import { type Work, refTitle } from '~/lib/works';
 
 interface Props {
   work: Work;
@@ -9,7 +9,7 @@ interface Props {
 const { work } = Astro.props;
 const { width, height } = work.data;
 const art = width && height ? await getImage({ src: work.data.images[0], width: 1280, format: 'webp', quality: 82 }) : null;
-const title = displayTitle(work);
+const title = refTitle(work);
 ---
 
 {

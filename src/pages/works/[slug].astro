@@ -12,6 +12,7 @@ import {
   getWorks,
   related,
   displayTitle,
+  refTitle,
   sizeLabel,
   sizeLabelCm,
   priceLabel,
@@ -34,7 +35,7 @@ interface Props {
 const { work, all } = Astro.props;
 const { Content } = await render(work);
 const d = work.data;
-const title = displayTitle(work);
+const title = refTitle(work);
 const size = sizeLabel(work);
 const more = related(all, work);
 const primary = d.collections[0];
@@ -108,7 +109,8 @@ const jsonLd = {
     <div class="info">
       <div class="sticky">
         <p class={`badge badge--${d.status}`}>{statusLabel[d.status]}</p>
-        <h1 class="title">{title}</h1>
+        <h1 class="title">{displayTitle(work)}</h1>
+        {!d.title && <p class="ref mono">Catalogue ref. {title.replace(/^Untitled \((.*)\)$/, '$1')}</p>}
         {size && <p class="size mono">{size}</p>}
         <p class="price">{priceLabel(work)}</p>
 
@@ -245,7 +247,8 @@ const jsonLd = {
     font-size: var(--step-4);
     line-height: 1;
   }
-  .size {
+  .size,
+  .ref {
     color: var(--muted);
     margin-top: -0.5rem;
   }

@@ -1,7 +1,7 @@
 ---
 import Base from '~/layouts/Base.astro';
 import ArtImage from '~/components/ArtImage.astro';
-import { getWorks, workUrl, displayTitle } from '~/lib/works';
+import { getWorks, workUrl, refTitle } from '~/lib/works';
 import hero from '~/assets/site/process-hero.webp';
 import material from '~/assets/site/process-01-material.webp';
 import cast from '~/assets/site/process-03-cast.webp';
@@ -98,7 +98,7 @@ const stages = [
             </ul>
             {s.work && (
               <a class="link" href={workUrl(s.work)}>
-                See this work — {displayTitle(s.work)} →
+                See this work — {refTitle(s.work)} →
               </a>
             )}
           </div>

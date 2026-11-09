@@ -54,6 +54,7 @@ const uid = `f-${id}`;
   <form class="form" action={site.formEndpoint} method="POST" data-inquiry-form>
     <input type="hidden" name="_subject" value={subject} data-subject />
     <input type="hidden" name="source" value={source} />
+    <input type="hidden" name="page" value={new URL(Astro.url.pathname, site.url).href} />
     {works.length > 0 && <input type="hidden" name="works" value={works.join(', ')} />}
     <input type="hidden" name="works_list" value="" data-works-list />
     <label class="trap" aria-hidden="true">Leave empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>

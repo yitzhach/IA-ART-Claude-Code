@@ -17,6 +17,17 @@ export const workUrl = (w: Work) => `/works/${w.id}/`;
 
 export const displayTitle = (w: Work) => w.data.title ?? 'Untitled';
 
+/**
+ * A name that identifies the piece unambiguously — the title, or "Untitled (Abstract 04)" for an
+ * untitled work (from its folder name). Used wherever Isaac needs to know which piece is meant:
+ * inquiries, the inquiry list, page titles, the assistant.
+ */
+export function refTitle(w: Work): string {
+  if (w.data.title) return w.data.title;
+  const m = w.id.match(/^untitled-([a-z]+)-(\d+)$/);
+  return m ? `Untitled (${m[1][0].toUpperCase()}${m[1].slice(1)} ${m[2]})` : `Untitled (${w.id})`;
+}
+
 /** "34 × 48 in" — width × height (× depth). Empty string when unknown. */
 export function sizeLabel(w: Work): string {
   const { width, height, depth } = w.data;
@@ -56,7 +67,7 @@ export const collectionsLabel = (w: Work) =>
 /** One-line summary used for alt text, meta descriptions and the AI assistant. */
 export function summary(w: Work): string {
   const parts = [
-    displayTitle(w),
+    refTitle(w),
     collectionsLabel(w) && `${collectionsLabel(w).toLowerCase()} work`,
     w.data.medium,
     sizeLabel(w),
@@ -66,7 +77,7 @@ export function summary(w: Work): string {
 }
 
 export const altText = (w: Work) =>
-  w.data.alt ?? `${displayTitle(w)} — ${collectionsLabel(w) || 'mixed media'} work by Isaac Anderson`;
+  w.data.alt ?? `${refTitle(w)} — ${collectionsLabel(w) || 'mixed media'} work by Isaac Anderson`;
 
 /** Works sharing a collection, nearest in order first. */
 export function related(all: Work[], w: Work, n = 4): Work[] {

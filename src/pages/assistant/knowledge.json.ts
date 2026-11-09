@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getImage } from 'astro:assets';
 import { faq } from '~/lib/faq';
 import { site, collectionInfo } from '~/lib/site';
-import { getWorks, workUrl, displayTitle, sizeLabel, sizeLabelCm, priceLabel, collectionsLabel } from '~/lib/works';
+import { getWorks, workUrl, refTitle, sizeLabel, sizeLabelCm, priceLabel, collectionsLabel } from '~/lib/works';
 
 /**
  * Everything the Ask AI assistant knows, generated at build time from the catalogue and FAQ.
@@ -16,7 +16,7 @@ export const GET: APIRoute = async () => {
       const thumb = await getImage({ src: w.data.images[0], width: 320, format: 'webp', quality: 72 });
       return {
         slug: w.id,
-        title: displayTitle(w),
+        title: refTitle(w),
         titled: Boolean(w.data.title),
         url: workUrl(w),
         thumb: thumb.src,

@@ -4,13 +4,13 @@
  * and a one-page spec sheet via the browser's print / save-as-PDF.
  */
 import { getImage } from 'astro:assets';
-import { type Work, displayTitle } from '~/lib/works';
+import { type Work, refTitle } from '~/lib/works';
 
 interface Props {
   work: Work;
 }
 const { work } = Astro.props;
-const title = displayTitle(work);
+const title = refTitle(work);
 const full = await Promise.all(
   work.data.images.map((img) => getImage({ src: img, width: Math.min(2400, img.width), format: 'webp', quality: 86 })),
 );

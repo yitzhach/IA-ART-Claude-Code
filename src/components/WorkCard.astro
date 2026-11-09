@@ -1,6 +1,6 @@
 ---
 import ArtImage from './ArtImage.astro';
-import { type Work, workUrl, displayTitle, sizeLabel, collectionsLabel, priceLabel, statusLabel, altText } from '~/lib/works';
+import { type Work, workUrl, refTitle, sizeLabel, collectionsLabel, priceLabel, statusLabel, altText } from '~/lib/works';
 
 interface Props {
   work: Work;
@@ -13,12 +13,12 @@ const meta = [sizeLabel(work), collectionsLabel(work)].filter(Boolean).join(' ·
 ---
 
 <article class="card" data-status={status} data-collections={work.data.collections.join(' ')}>
-  <a href={workUrl(work)} class="frame" aria-label={`${displayTitle(work)}${meta ? `, ${meta}` : ''}`}>
+  <a href={workUrl(work)} class="frame" aria-label={`${refTitle(work)}${meta ? `, ${meta}` : ''}`}>
     <ArtImage src={work.data.images[0]} alt={altText(work)} sizes={sizes} priority={priority} />
     {status === 'sold' && <span class="dot" title="Sold" />}
   </a>
   <div class="caption">
-    <h3 class="title"><a href={workUrl(work)}>{displayTitle(work)}</a></h3>
+    <h3 class="title"><a href={workUrl(work)}>{refTitle(work)}</a></h3>
     {meta && <p class="meta mono">{meta}</p>}
     <p class={`state state--${status}`}>{status === 'available' || status === 'inquire' ? priceLabel(work) : statusLabel[status]}</p>
   </div>

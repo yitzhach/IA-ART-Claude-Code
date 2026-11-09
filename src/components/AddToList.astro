@@ -1,7 +1,7 @@
 ---
 /** "Add to inquiry list" toggle for a work. */
 import { getImage } from 'astro:assets';
-import { type Work, displayTitle, sizeLabel, workUrl } from '~/lib/works';
+import { type Work, refTitle, sizeLabel, workUrl } from '~/lib/works';
 
 interface Props {
   work: Work;
@@ -11,7 +11,7 @@ const { work, class: className } = Astro.props;
 const thumb = await getImage({ src: work.data.images[0], width: 160, format: 'webp', quality: 70 });
 const item = {
   slug: work.id,
-  title: displayTitle(work),
+  title: refTitle(work),
   meta: sizeLabel(work),
   thumb: thumb.src,
   url: workUrl(work),

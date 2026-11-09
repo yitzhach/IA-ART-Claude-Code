@@ -63,7 +63,7 @@ const SCHEMA = {
 export function knowledgeText(kb: Knowledge): string {
   const works = kb.works.map((w) => ({
     slug: w.slug,
-    title: w.titled ? w.title : 'Untitled',
+    title: w.title,
     collections: w.collections,
     status: w.status,
     priceLabel: w.priceLabel,
