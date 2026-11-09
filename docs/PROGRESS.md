@@ -31,7 +31,7 @@ clean, fast Astro site in the same look and voice.
   address (`isaacandersonart-v2…workers.dev`); your live site isn't touched. README › Deploying has the rest.
 
 ### What only you can supply (full list in `docs/CONTENT-NEEDED.md`)
-1. Titles, sizes and years for the 35 untitled works (they show as "Untitled (Abstract 04)" etc. until then).
+1. Titles, sizes and years for the 37 untitled works (they show as "Untitled (Abstract 04)" etc. until then).
 2. Prices for available works — or keep "Price on request". Status for works marked "Availability on request".
 3. Your training and background for the About page, plus exhibitions and press.
 4. A read of the assistant's answers (web editor → Assistant answers): add care, payment, shipping, show dates.

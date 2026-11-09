@@ -149,7 +149,7 @@ public/                    files served as-is (icons, robots.txt, _headers, _red
 public/admin/              the web editor (Sveltia CMS) and its config.yml
 worker/                    Cloudflare Worker: /api/ask (Ask AI); everything else is static
 tests/                     Playwright browser tests (pages, inquiry list, Ask AI, wall view)
-docs/                      audit, plan, progress log, content checklist
+docs/                      handoff, audit, plan, progress log, content checklist
 scripts/                   maintenance scripts (content report, the one-time v1 migration)
 ```
 

@@ -4,6 +4,9 @@ Isaac Anderson's portfolio and sales site (sculptural art in cement, plaster and
 site + one Cloudflare Worker for the Ask AI endpoint. Isaac is not a developer: explain changes in plain
 language and keep everyday edits (prices, new works) possible without code. README.md has the full tour.
 
+**New session? Read `docs/HANDOFF.md` first** — current state, what's waiting on Isaac, go-live steps, and
+sandbox notes. Then the top of `docs/PROGRESS.md`.
+
 ## Commands
 
 ```bash
