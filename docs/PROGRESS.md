@@ -49,6 +49,14 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
 - **Fonts self-hosted** — no third-party requests at all.
 - Speed on a throttled phone (slow 4G): Home main image 9.7 s → 0.8 s; Abstract fully loaded 55 s → 8.6 s.
 
+### 2026-11-09 01:55–02:00 ET — session 2 (continued)
+- Work pages: full-resolution **close-up** (tap to zoom across the surface), **Share**, and a one-page
+  **spec sheet** when printed / saved as PDF.
+- **Untitled works are now unambiguous**: "Untitled (Abstract 04)" in inquiries, page titles, the inquiry list and
+  the assistant; every inquiry also records the page it came from.
+- **Tests in the repo**: `npm test` (26 Playwright checks, desktop + phone, ~12 s). **CLAUDE.md** working notes.
+- Content checklist now includes reviewing the assistant's answers and choosing featured works.
+
 ## Morning summary for Isaac
 
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched

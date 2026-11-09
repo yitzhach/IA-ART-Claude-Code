@@ -65,6 +65,10 @@ Fill in what you know; anything left blank is simply not shown on the site (no p
 - [ ] **Available No. 002** (now \`untitled-sculptural-08\`, sold) carried the same caption as No. 001 "Green Horizon,
       34 × 48" — real title and size?
 - [ ] **Prices:** show prices on available works, or keep "Price on request"? Add \`price: 4800\` to a work to show it.
+- [ ] **Assistant answers:** \`src/lib/faq.ts\` was drafted from the v1 site's own wording (process, lead time, delivery,
+      trade, materials). Read it once — Ask AI repeats it to visitors. Add anything you'd like it to know (care,
+      payment, shipping costs, show dates).
+- [ ] **Featured works:** add \`featured: true\` to up to 8 works to choose what the home page shows.
 - [ ] **Shows & fairs:** upcoming show dates would help art-fair visitors find you again.
 - [ ] **Unused photos:** \`src/assets/site/hero-macro-2/3/6.webp\` look like finished works not in the catalogue — are they?
 

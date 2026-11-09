@@ -83,7 +83,8 @@
 2. **Checkout:** "Buy now" via Stripe Payment Links, a deposit to reserve, or inquiry-only?
 3. **AI provider:** Claude API (best answers; needs an API key) or Cloudflare Workers AI (no key, included with the account)?
 4. **Public email:** keep Gmail or set up `studio@isaacandersonart.com`?
-5. **Studio tool:** drop it from the site, or protect it with Cloudflare Access?
+5. **Studio tool:** dropped from V2 (the old link redirects home). Keep it somewhere private?
+6. **Forms:** Formspree's free plan allows 50 submissions a month — upgrade if inquiries outgrow it.
 
 ## Content only Isaac can supply
 
