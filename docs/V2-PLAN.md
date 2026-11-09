@@ -50,30 +50,31 @@
 - [x] All v1 phone bugs fixed (form overflow, hero overlap, back-to-top overlap)
 - [x] No placeholder ever renders — missing fields are simply omitted
 - [x] `robots.txt`, sitemap, structured data (VisualArtwork / Offer)
-- [ ] Recover the 2 missing referenced images from the Claude Design project
+- [x] Recover the missing images from the Claude Design project (3 sharper work photos, 1 new work, a show photo)
 
 ### Phase 2 — Buying and inquiring
 - [x] Work detail pages with status/price rules (`available`, `reserved`, `sold`, `commission`, `inquire`)
 - [x] Inquiry list across the site + prefilled Formspree form (works, notes, wall size)
 - [x] Optional `buyLink` per work (Stripe Payment Link) → "Buy now" button
-- [ ] Commission form with budget/size/location fields; to-the-trade option for designers
+- [x] Commission form with project type, timeline, location and size; "I am a" (designer, architect…) on every form
 - [x] Fold the designer's Available page in as a filtered view (`/works/?status=available`)
 
 ### Phase 3 — Ask AI
-- [ ] `src/content/faq.yaml` — commission process, lead times, shipping, install, care, materials, pricing guidance
-- [ ] Panel UI (keyboard + screen reader friendly), instant FAQ matching with no network call
-- [ ] `/api/ask` Worker: answers grounded in catalogue + FAQ, cites works with links, hands off to inquiry
-- [ ] Guardrails: never invent prices or availability; offer to connect with Isaac
+- [x] `src/lib/faq.ts` — commission process, lead times, shipping, install, care, materials, pricing guidance
+- [x] Panel UI (keyboard + screen reader friendly), instant FAQ matching with no network call
+- [x] `/api/ask` Worker: answers grounded in catalogue + FAQ, cites works with links, hands off to inquiry
+- [x] Guardrails: never invent prices or availability; offer to connect with Isaac
 
 ### Phase 4 — Wall view
-- [ ] Sample rooms with known scale; work rendered at true size
-- [ ] "Use my wall": photo upload, set scale from a known width, drag/resize, save image
+- [x] Sample rooms with known scale; work rendered at true size
+- [x] "Use my wall": photo upload, set scale from a known width, drag/resize, save image
 
 ### Phase 5 — Operations
-- [ ] Cloudflare Web Analytics (privacy-friendly, free)
+- [x] Cloudflare Web Analytics (privacy-friendly, free) — a dashboard switch, documented in README
+- [x] 301 redirects from every v1 address (`public/_redirects`)
 - [x] Deploy guide (Workers Builds from GitHub, or `wrangler deploy`)
 - [ ] Optional web editor (Keystatic / Decap) so prices and new works can be edited from a phone
-- [ ] Move `/studio.html` off the public site
+- [x] Move `/studio.html` off the public site
 
 ## Decisions waiting on Isaac
 

@@ -51,29 +51,55 @@ You can make all of these edits on github.com (open the file → pencil icon →
 
 ---
 
+## Ask AI and "View on your wall"
+
+**Ask AI** (the button on every page) answers common questions instantly from `src/lib/faq.ts` —
+edit that file to change or add answers. Questions the FAQ doesn't cover go to Claude through the
+small Worker in `worker/`, which only knows what's in the catalogue and FAQ (it is told never to
+invent prices, sizes or policies) and hands anything else to the studio.
+
+To switch the AI on after deploying, add your Anthropic API key as a secret:
+
+```bash
+npx wrangler secret put ANTHROPIC_API_KEY
+```
+
+Without a key the assistant still works — FAQ answers and catalogue search are instant, and other
+questions become a prefilled inquiry. Settings in `wrangler.jsonc → vars`:
+`ASSISTANT_MODEL` (default `claude-opus-5-5`; `claude-haiku-5-5` costs about 1/40th as much) and
+`ASSISTANT_EFFORT` (`low` = fastest replies). Set a monthly spend limit in the Anthropic Console.
+Each visitor is limited to about 12 questions a minute.
+
+**View on your wall** appears on every work that has a width and height. It shows the piece at true
+size in a sample room, or on a photo of the visitor's own wall; the photo never leaves their device.
+
 ## Running it locally
 
 Needs Node 20 or newer.
 
 ```bash
 npm install
-npm run dev        # http://localhost:4321 — live-reloads as you edit
-npm run build      # production build into dist/
-npm run preview    # serve the production build
-npm run check      # type-check everything
+npm run dev          # http://localhost:4321 — live-reloads as you edit
+npm run build        # production build into dist/
+npm run dev:worker   # build, then run the site + Worker locally in Cloudflare's runtime
+npm run check        # type-check the site and the Worker
+npm run content:report
 ```
 
 ## Deploying (Cloudflare)
 
 The site is plain static files in `dist/`, served by a Cloudflare Worker (`wrangler.jsonc`).
 
-1. **Preview first:** `npm run build && npx wrangler deploy` publishes to a separate preview Worker
+1. **Preview first:** `npm run deploy` (build + `wrangler deploy`) publishes to a separate preview Worker
    (`isaacandersonart-v2`) with its own `*.workers.dev` address. The live site is not touched.
 2. **Go live:** in the Cloudflare dashboard → Workers & Pages → `isaacandersonart-v2` → Settings → Domains,
    add `isaacandersonart.com` and `www.isaacandersonart.com`. (Remove them from the old Worker,
    `solitary-thunder-8ff9`, first.) The old Worker can stay as an instant rollback.
 3. **Automatic deploys (optional):** connect this GitHub repo in Workers & Pages → Settings → Builds, with build
    command `npm run build`. Every push to the chosen branch then redeploys.
+
+Old v1 addresses (`/about.html`, `/available.html`, …) redirect to their new pages via `public/_redirects`.
+For visitor statistics, turn on **Web Analytics** for the domain in the Cloudflare dashboard (free, no cookies).
 
 ## How the code is organised
 
@@ -84,12 +110,15 @@ src/
   lib/site.ts              contact details, navigation, collection descriptions
   lib/works.ts             helpers: titles, sizes, prices, related works
   layouts/Base.astro       <head> (titles, share previews), header, footer
-  components/              Header, Footer, WorkCard, WorkGrid, ArtImage, InquiryForm
+  components/              Header, Footer, WorkCard, WorkGrid, ArtImage, InquiryForm,
+                           InquiryList, AddToList, AskAI, WallView
+  lib/faq.ts               the assistant's preloaded answers
   pages/                   one file per page; works/[slug].astro makes every artwork page
   styles/global.css        design tokens (colour, type, spacing) and shared styles
-  scripts/                 small browser scripts (scroll reveal)
+  scripts/                 browser scripts: inquiry list, Ask AI, wall view, scroll reveal
   assets/site/             site photography (hero, interiors, process, portrait)
-public/                    files served as-is (icons, robots.txt, _headers)
+public/                    files served as-is (icons, robots.txt, _headers, _redirects)
+worker/                    Cloudflare Worker: /api/ask (Ask AI); everything else is static
 docs/                      audit, plan, progress log, content checklist
 scripts/                   maintenance scripts (content report, the one-time v1 migration)
 ```
