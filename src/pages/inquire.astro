@@ -1,6 +1,7 @@
 ---
 import Base from '~/layouts/Base.astro';
 import InquiryForm from '~/components/InquiryForm.astro';
+import InquiryList from '~/components/InquiryList.astro';
 
 const paths = [
   { href: '/works/?status=available', label: 'Buy a piece', text: 'See what’s available now, with sizes and prices.' },
@@ -28,6 +29,7 @@ const paths = [
   </section>
 
   <section class="wrap section--tight">
+    <InquiryList />
     <InquiryForm source="Inquire page" />
   </section>
 </Base>

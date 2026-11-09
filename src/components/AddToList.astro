@@ -1,0 +1,46 @@
+---
+/** "Add to inquiry list" toggle for a work. */
+import { getImage } from 'astro:assets';
+import { type Work, displayTitle, sizeLabel, workUrl } from '~/lib/works';
+
+interface Props {
+  work: Work;
+  class?: string;
+}
+const { work, class: className } = Astro.props;
+const thumb = await getImage({ src: work.data.images[0], width: 160, format: 'webp', quality: 70 });
+const item = {
+  slug: work.id,
+  title: displayTitle(work),
+  meta: sizeLabel(work),
+  thumb: thumb.src,
+  url: workUrl(work),
+};
+---
+
+<button type="button" class:list={['btn btn--ghost add', className]} data-add-to-list={JSON.stringify(item)} aria-pressed="false">
+  <span data-label>Add to inquiry list</span>
+</button>
+
+<script>
+  import { add, remove, has, onChange } from '~/scripts/inquiry-list';
+
+  document.querySelectorAll<HTMLButtonElement>('[data-add-to-list]').forEach((btn) => {
+    const item = JSON.parse(btn.dataset.addToList!);
+    const label = btn.querySelector<HTMLElement>('[data-label]')!;
+    onChange(() => {
+      const added = has(item.slug);
+      btn.setAttribute('aria-pressed', String(added));
+      label.textContent = added ? 'On your inquiry list ✓' : 'Add to inquiry list';
+    });
+    btn.addEventListener('click', () => (has(item.slug) ? remove(item.slug) : add(item)));
+  });
+</script>
+
+<style>
+  .add[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--plaster);
+    border-color: var(--ink);
+  }
+</style>

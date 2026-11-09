@@ -1,0 +1,129 @@
+---
+/** Shows the visitor's saved works on the Inquire page and attaches them to the form. */
+---
+
+<section class="list" id="list" aria-labelledby="list-h" data-inquiry-list hidden>
+  <header>
+    <h2 class="label" id="list-h">Your inquiry list <span data-count></span></h2>
+    <button type="button" class="clear mono" data-clear>Clear</button>
+  </header>
+  <ul data-items></ul>
+  <p class="note mono">These works are included with the message you send below.</p>
+</section>
+
+<template data-item-template>
+  <li class="item">
+    <a data-link class="thumb"><img data-thumb alt="" width="64" height="80" loading="lazy" /></a>
+    <div>
+      <a data-link class="title" data-title></a>
+      <p class="meta mono" data-meta></p>
+    </div>
+    <button type="button" class="remove" data-remove aria-label="Remove">×</button>
+  </li>
+</template>
+
+<script>
+  import { onChange, remove, clear, asText } from '~/scripts/inquiry-list';
+
+  const root = document.querySelector<HTMLElement>('[data-inquiry-list]');
+  const tpl = document.querySelector<HTMLTemplateElement>('[data-item-template]');
+  if (root && tpl) {
+    const ul = root.querySelector('[data-items]')!;
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const form = document.querySelector<HTMLFormElement>('[data-inquiry-form]');
+    const field = form?.querySelector<HTMLInputElement>('[data-works-list]');
+    const subject = form?.querySelector<HTMLInputElement>('[data-subject]');
+
+    onChange((list) => {
+      root.hidden = list.length === 0;
+      count.textContent = `(${list.length})`;
+      ul.replaceChildren(
+        ...list.map((item) => {
+          const li = tpl.content.firstElementChild!.cloneNode(true) as HTMLElement;
+          li.querySelectorAll<HTMLAnchorElement>('[data-link]').forEach((a) => (a.href = item.url));
+          li.querySelector<HTMLImageElement>('[data-thumb]')!.src = item.thumb;
+          li.querySelector('[data-title]')!.textContent = item.title;
+          li.querySelector('[data-meta]')!.textContent = item.meta;
+          const btn = li.querySelector<HTMLButtonElement>('[data-remove]')!;
+          btn.setAttribute('aria-label', `Remove ${item.title}`);
+          btn.addEventListener('click', () => remove(item.slug));
+          return li;
+        }),
+      );
+      if (field) field.value = asText(list);
+      if (subject && list.length) subject.value = `Inquiry about ${list.length} ${list.length === 1 ? 'work' : 'works'}`;
+    });
+
+    root.querySelector('[data-clear]')!.addEventListener('click', clear);
+    form?.addEventListener('inquiry:sent', clear);
+  }
+</script>
+
+<style>
+  .list {
+    padding: 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    margin-bottom: 2rem;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .clear {
+    background: none;
+    border: 0;
+    color: var(--muted);
+    text-decoration: underline;
+    padding: 0.5rem;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .thumb img {
+    width: 4rem;
+    height: 5rem;
+    object-fit: cover;
+  }
+  .title {
+    font: 400 1.125rem var(--font-serif);
+  }
+  .title:hover {
+    color: var(--rust);
+  }
+  .meta {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .remove {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--line);
+    background: none;
+    font-size: 1.25rem;
+    line-height: 1;
+    border-radius: 50%;
+  }
+  .remove:hover {
+    border-color: var(--rust);
+    color: var(--rust);
+  }
+  .note {
+    margin-top: 1rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+</style>

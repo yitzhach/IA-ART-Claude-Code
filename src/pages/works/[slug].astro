@@ -4,6 +4,7 @@ import Base from '~/layouts/Base.astro';
 import ArtImage from '~/components/ArtImage.astro';
 import WorkGrid from '~/components/WorkGrid.astro';
 import InquiryForm from '~/components/InquiryForm.astro';
+import AddToList from '~/components/AddToList.astro';
 import { site, collectionInfo } from '~/lib/site';
 import {
   getWorks,
@@ -118,9 +119,12 @@ const jsonLd = {
               Commission something similar
             </a>
           ) : (
-            <a class={`btn ${canBuy ? 'btn--ghost' : 'btn--primary'}`} href="#inquire">
-              {d.status === 'reserved' ? 'Join the waiting list' : 'Inquire about this piece'}
-            </a>
+            <>
+              <a class={`btn ${canBuy ? 'btn--ghost' : 'btn--primary'}`} href="#inquire">
+                {d.status === 'reserved' ? 'Join the waiting list' : 'Inquire about this piece'}
+              </a>
+              <AddToList work={work} />
+            </>
           )}
         </div>
 
