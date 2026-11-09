@@ -3,6 +3,55 @@
 Working branch: **`v2`**. `main` is untouched and still matches the live site.
 Nothing is deployed to Cloudflare — Isaac deploys.
 
+## Morning summary for Isaac — Monday 9 November
+
+### What's done
+The new site is complete and working on the `v2` branch, built from your Claude Design export but rewritten as a
+clean, fast Astro site in the same look and voice.
+
+- **46 works, one catalogue** (v1 had 84 numbered slots with the same piece filed up to four times). Every work has
+  its own shareable page with size (in and cm), status, price or "Price on request", close-up zoom, a one-page
+  spec sheet when printed, **View on your wall** (true scale, sample room or their own photo), and an inquiry form
+  that asks whether they want to buy, hold it for a client, or see it in person.
+- **Selling tools:** inquiry list (shortlist several works, send one inquiry), **Ask AI** on every page (instant
+  answers, finds works by collection, size or colour; Claude answers the rest once you add an API key), a phone-first
+  **art-fair page** with a printable QR booth card, and a commission form.
+- **Fixed from v1:** the inquiry form running off phone screens, ~85 visible placeholders, pages without titles or
+  link previews, sold works marked "Available", the hero overlapping on phones.
+- **Speed and quality:** home page main image 9.7 s → 0.8 s on a slow phone connection; Lighthouse 100 for
+  accessibility, best practices and SEO; zero accessibility violations; strict security headers; 41 automated checks.
+- **Easy to change:** a web editor at `/admin/` (prices, status, photos, new works, the assistant's answers, shows),
+  usable from your phone. Every old link (`/about.html`, the designer's `/available.html`…) redirects to its new page.
+
+### See it
+- **Without installing anything:** the visual tour, https://claude.ai/artifact/X4aVmg3vS3rNiop8ibPZVP
+- **On your computer:** install Node 20+, then in the repo folder run `npm install` and `npm run dev`, and open
+  http://localhost:4321
+- **On Cloudflare, privately:** `npx wrangler login`, then `npm run deploy` — it publishes to a separate preview
+  address (`isaacandersonart-v2…workers.dev`); your live site isn't touched. README › Deploying has the rest.
+
+### What only you can supply (full list in `docs/CONTENT-NEEDED.md`)
+1. Titles, sizes and years for the 35 untitled works (they show as "Untitled (Abstract 04)" etc. until then).
+2. Prices for available works — or keep "Price on request". Status for works marked "Availability on request".
+3. Your training and background for the About page, plus exhibitions and press.
+4. A read of the assistant's answers (web editor → Assistant answers): add care, payment, shipping, show dates.
+5. Approve the two collection descriptions Claude drafted (Figurative, Sculptural) and the per-work descriptions.
+6. Up to 8 works to feature on the home page; upcoming shows (your Show Ledger has the 2027 Florida season).
+7. Whether `untitled-abstract-04` and `untitled-sculptural-09` are the same piece; a straight-on photo of Lifted Up.
+
+### Decisions waiting on you
+1. Show prices on the site, or "Price on request"?
+2. "Buy now" through Stripe Payment Links, a deposit to reserve, or inquiry only?
+3. Switch on AI answers? Needs an Anthropic API key (`npx wrangler secret put ANTHROPIC_API_KEY`) and a monthly
+   spend limit. Default model is `claude-opus-5-5`; `claude-haiku-5-5` costs about 1/40th as much.
+4. Keep the Gmail address public, or set up studio@isaacandersonart.com (free with Cloudflare Email Routing)?
+5. Formspree's free plan allows 50 messages a month — upgrade if inquiries outgrow it.
+
+### Going live, when you're ready
+Preview first (above) → in Cloudflare, move isaacandersonart.com and www from the old Worker
+(`solitary-thunder-8ff9`) to `isaacandersonart-v2` → merge `v2` into `main` → switch the web editor's branch to
+`main` (`public/admin/config.yml`) → turn on Web Analytics. The old Worker stays as an instant rollback.
+
 ## How to resume (for Claude)
 
 1. `git clone https://github.com/yitzhach/ia-art-claude-code && cd ia-art-claude-code && git checkout v2`
@@ -116,34 +165,14 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   internal links. Refactor: structured data → `src/lib/structured-data.ts`, print styles → `src/styles/spec-sheet.css`.
   41 tests pass.
 
-### Next (for the 6:25 window)
-- Fresh end-to-end pass (desktop + phone) over every page; fix anything that looks off.
-- Refresh the morning summary below and the tour so they match the final state.
+### 2026-11-09 06:25 ET — session 3 (the 6:25 restart)
+- Fresh visual pass over every page (desktop + phone): no overflow, broken images, placeholders or errors.
+- Home page now leads with all 4 available works (was 2 available beside 6 sold).
+- The close-up viewer's image is created on first open (no empty `<img>` in the page).
+- Morning summary rewritten and moved to the top of this file.
 
 ### Note — new upload on `main`
 Isaac uploaded three images to `main` overnight (`images/library/8-jbpg-3000.webp`, `final-6003512.webp`,
 `img-6658.webp`). All three were already recovered from the Claude Design project and handled on `v2`: `img-6658`
 is the catalogue work `untitled-figurative-14`; `8-jbpg-3000` duplicates the second photo of `untitled-figurative-13`;
 `final-6003512` is a room photo (unused). `main` itself is left untouched.
-
-## Morning summary for Isaac
-
-**Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched
-and still matches the live site. Nothing has been deployed.
-
-**See it without installing anything:** the visual tour at https://claude.ai/artifact/X4aVmg3vS3rNiop8ibPZVP
-(private to you) — screenshots of every page and feature on desktop and phone, before/after numbers, and the list
-of what's needed from you.
-
-**Run it.** `npm install && npm run dev`, then open http://localhost:4321 — or deploy a private preview
-(README › Deploying, step 1); the live site isn't affected until you move the domain.
-
-**What only you can supply** — `docs/CONTENT-NEEDED.md` lists it: titles, sizes and years for most works,
-prices (or keep "Price on request"), the About-page biography and exhibitions, approval of two drafted collection
-descriptions, and the FAQ answers in `src/content/faq.yaml`.
-
-**Edit it yourself.** Once deployed, `/admin/` is a visual editor for prices, status, photos and new works —
-setup is one GitHub token (README › The web editor).
-
-**Decisions waiting on you** — `docs/V2-PLAN.md` › Decisions: show prices?; "Buy now" via Stripe?; AI on
-(add an Anthropic API key) and which model; public email address.
