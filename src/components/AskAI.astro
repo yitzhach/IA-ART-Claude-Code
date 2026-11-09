@@ -28,7 +28,8 @@
 
     <div class="ask-chips" data-ask-chips></div>
 
-    <form class="ask-form" data-ask-form>
+    {/* action: if the assistant's code can't load, a question goes to the inquiry form (prefilled). */}
+    <form class="ask-form" data-ask-form action="/inquire/">
       <label class="visually-hidden" for="ask-input">Your question</label>
       <input
         id="ask-input"
@@ -51,13 +52,37 @@
 <script>
   const dialog = document.querySelector<HTMLDialogElement>('[data-ask]')!;
   const launch = document.querySelector<HTMLButtonElement>('[data-ask-open]')!;
-  let ready: Promise<unknown> | null = null;
+  const form = dialog.querySelector<HTMLFormElement>('[data-ask-form]')!;
+  const input = dialog.querySelector<HTMLInputElement>('[data-ask-input]')!;
+  let ready: Promise<void> | null = null;
+  let loaded = false;
+  let failed = false;
+
+  const load = () =>
+    (ready ??= import('~/scripts/ask')
+      .then((m) => m.init(dialog))
+      .then(() => void (loaded = true))
+      .catch(() => void (failed = true)));
 
   const open = (question?: string) => {
     if (!dialog.open) dialog.showModal();
-    ready ??= import('~/scripts/ask').then((m) => m.init(dialog));
-    ready.then(() => question && dialog.dispatchEvent(new CustomEvent('ask:question', { detail: question })));
+    load().then(() => {
+      if (!question) return;
+      if (loaded) dialog.dispatchEvent(new CustomEvent('ask:question', { detail: question }));
+      else location.href = `/inquire/?q=${encodeURIComponent(question)}`;
+    });
   };
+
+  // A question sent while the assistant's code is still loading (a slow phone connection) waits for
+  // it instead of reloading the page. Once loaded, ask.ts handles the form; if it failed to load, the
+  // form submits to its action and the question lands in the inquiry form.
+  form.addEventListener('submit', (e) => {
+    if (loaded || failed) return;
+    e.preventDefault();
+    const q = input.value.trim();
+    input.value = '';
+    if (q) open(q);
+  });
 
   launch.addEventListener('click', () => open());
   dialog.querySelector('[data-ask-close]')!.addEventListener('click', () => dialog.close());
