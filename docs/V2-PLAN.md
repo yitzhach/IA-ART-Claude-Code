@@ -76,6 +76,15 @@
 - [x] Web editor at `/admin/` (Sveltia CMS, GitHub token sign-in) so prices and new works can be edited from a phone
 - [x] Move `/studio.html` off the public site
 
+### Phase 6 — Polish (added overnight, beyond the original plan)
+- [x] Purchase intent on work-page forms: ask a question / buy / hold for a client / see it in person
+- [x] "More like this": related works ranked by shared palette and motifs, available works first on ties
+- [x] Breadcrumb structured data on work pages
+- [x] Shows & exhibitions data (`src/content/shows.yaml`), editable in the web editor
+- [x] Assistant answers (`src/content/faq.yaml`) editable in the web editor
+- [ ] When Isaac supplies content: titles/sizes, prices, featured works, bio, shows (see CONTENT-NEEDED)
+- [ ] After go-live: switch the web editor's branch to `main`; turn on Web Analytics; add the Anthropic key
+
 ## Decisions waiting on Isaac
 
 1. **Prices:** show real prices on available works, or keep "price on request"? Commission pricing guidance

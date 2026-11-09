@@ -79,10 +79,25 @@ export function summary(w: Work): string {
 export const altText = (w: Work) =>
   w.data.alt ?? `${refTitle(w)} — ${collectionsLabel(w) || 'mixed media'} work by Isaac Anderson`;
 
-/** Works sharing a collection, nearest in order first. */
+const LOOK_STOP = new Set(['with', 'over', 'from', 'into', 'above', 'below', 'base', 'band', 'panel', 'plaster', 'surface', 'small', 'large', 'shown', 'framed', 'field']);
+/** Distinctive words from a work's description (colours, motifs, materials). */
+const lookWords = (w: Work) =>
+  new Set((w.data.alt ?? '').toLowerCase().match(/[a-z]{4,}/g)?.filter((t) => !LOOK_STOP.has(t)) ?? []);
+
+/**
+ * "More like this": works sharing a collection, ranked by how much their descriptions overlap
+ * (palette, motif), then by catalogue order. Available works win ties.
+ */
 export function related(all: Work[], w: Work, n = 4): Work[] {
+  const mine = lookWords(w);
+  const score = (o: Work) => {
+    let s = 0;
+    for (const t of lookWords(o)) if (mine.has(t)) s += 1;
+    if (o.data.status === 'available') s += 0.5;
+    return s;
+  };
   return all
     .filter((o) => o.id !== w.id && o.data.collections.some((c) => w.data.collections.includes(c)))
-    .sort((a, b) => Math.abs(a.data.order - w.data.order) - Math.abs(b.data.order - w.data.order))
+    .sort((a, b) => score(b) - score(a) || Math.abs(a.data.order - w.data.order) - Math.abs(b.data.order - w.data.order))
     .slice(0, n);
 }

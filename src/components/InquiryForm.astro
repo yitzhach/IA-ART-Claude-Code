@@ -90,6 +90,20 @@ const uid = `f-${id}`;
     </div>
 
     {
+      variant === 'purchase' && (
+        <label class="field">
+          <span class="label">What would you like to do?</span>
+          <select name="intent">
+            <option>Ask a question</option>
+            <option>Buy this piece</option>
+            <option>Put it on hold for a client</option>
+            <option>See it in person</option>
+          </select>
+        </label>
+      )
+    }
+
+    {
       variant === 'commission' && (
         <>
           <div class="row">

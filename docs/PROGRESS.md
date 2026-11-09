@@ -103,6 +103,11 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   (model, effort, JSON schema, fallbacks, cache marker), reply filtering and hand-off on refusal/truncation/bad JSON.
   37 tests pass.
 
+### 2026-11-09 02:35–02:38 ET — session 2 (continued, via the 1:22 restart)
+- Work-page forms ask what the visitor wants (question / buy / hold for a client / see in person).
+- "More like this" ranks related works by shared palette and motifs.
+- Breadcrumb structured data on work pages. Plan Phase 6 added; remaining items need Isaac's content or go-live.
+
 ### Note — new upload on `main`
 Isaac uploaded three images to `main` overnight (`images/library/8-jbpg-3000.webp`, `final-6003512.webp`,
 `img-6658.webp`). All three were already recovered from the Claude Design project and handled on `v2`: `img-6658`
