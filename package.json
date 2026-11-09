@@ -3,12 +3,13 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "isaacandersonart.com — sculptural art in cement, plaster and steel by Isaac Anderson.",
+  "description": "isaacandersonart.com \u2014 sculptural art in cement, plaster and steel by Isaac Anderson.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "content:report": "node scripts/content-report.mjs"
   },
   "engines": {
     "node": ">=20"
