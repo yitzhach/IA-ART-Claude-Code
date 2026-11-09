@@ -89,6 +89,7 @@ npm run dev          # http://localhost:4321 — live-reloads as you edit
 npm run build        # production build into dist/
 npm run dev:worker   # build, then run the site + Worker locally in Cloudflare's runtime
 npm run check        # type-check the site and the Worker
+npm test             # build + browser tests on desktop and phone (first time: npx playwright install chromium)
 npm run content:report
 ```
 
@@ -125,6 +126,7 @@ src/
   assets/site/             site photography (hero, interiors, process, portrait)
 public/                    files served as-is (icons, robots.txt, _headers, _redirects)
 worker/                    Cloudflare Worker: /api/ask (Ask AI); everything else is static
+tests/                     Playwright browser tests (pages, inquiry list, Ask AI, wall view)
 docs/                      audit, plan, progress log, content checklist
 scripts/                   maintenance scripts (content report, the one-time v1 migration)
 ```
