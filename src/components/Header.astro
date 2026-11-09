@@ -77,6 +77,8 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     menu.hidden = !open;
     header.toggleAttribute('data-open', open);
     document.documentElement.style.overflow = open ? 'hidden' : '';
+    // Keyboard and screen-reader users land on the first menu link.
+    if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
   };
   btn.addEventListener('click', () => setOpen(menu.hidden));
   menu.addEventListener('click', (e) => {

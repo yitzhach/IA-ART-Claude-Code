@@ -40,3 +40,13 @@ test('works filter shows only available works', async ({ page }) => {
     expect(status).toBe('available');
   }
 });
+
+test('phone menu moves focus in, and Escape returns it', async ({ page }, info) => {
+  test.skip(info.project.name !== 'phone', 'phone layout only');
+  await page.goto('/');
+  await page.click('[data-menu-btn]');
+  await expect(page.locator('#menu a').first()).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#menu')).toBeHidden();
+  await expect(page.locator('[data-menu-btn]')).toBeFocused();
+});
