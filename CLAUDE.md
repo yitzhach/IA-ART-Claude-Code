@@ -15,7 +15,8 @@ npm run dev:worker      # site + Worker in workerd (Ask AI needs --var ANTHROPIC
 ```
 
 Run `npm run check && npm test` before every commit that changes code. `tests/worker.spec.ts` unit-tests the Ask AI
-Worker with a fake Claude client (no key or network needed).
+Worker with a fake Claude client (no key or network needed); `tests/build.spec.ts` scans the build for anything the
+CSP would block (inline scripts/styles), duplicate view-transition names, and broken internal links.
 
 ## Where things live
 
