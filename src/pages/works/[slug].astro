@@ -6,6 +6,7 @@ import WorkGrid from '~/components/WorkGrid.astro';
 import InquiryForm from '~/components/InquiryForm.astro';
 import AddToList from '~/components/AddToList.astro';
 import WallView from '~/components/WallView.astro';
+import WorkTools from '~/components/WorkTools.astro';
 import { site, collectionInfo } from '~/lib/site';
 import {
   getWorks,
@@ -91,12 +92,14 @@ const jsonLd = {
       {
         d.images.map((img, i) => (
           <figure class="plate">
-            <ArtImage
-              src={img}
-              alt={i === 0 ? altText(work) : `${title} — view ${i + 1}`}
-              sizes="(min-width: 1000px) 60vw, 100vw"
-              priority={i === 0}
-            />
+            <button type="button" class="plate-zoom" data-zoom-open={i} aria-label={`Close-up of ${title}${i ? `, view ${i + 1}` : ''}`}>
+              <ArtImage
+                src={img}
+                alt={i === 0 ? altText(work) : `${title} — view ${i + 1}`}
+                sizes="(min-width: 1000px) 60vw, 100vw"
+                priority={i === 0}
+              />
+            </button>
           </figure>
         ))
       }
@@ -150,11 +153,17 @@ const jsonLd = {
           <Content />
         </div>
 
+        <WorkTools work={work} />
+
         <ul class="assurances mono">
           <li>Delivered and installed throughout the U.S. and internationally</li>
           <li>Questions about size, colour or a custom version? Just ask</li>
           <li>To-the-trade inquiries welcome</li>
         </ul>
+
+        <p class="print-only print-contact">
+          Isaac Anderson Art · {site.phone.display} · {site.instagram.handle} · {new URL(workUrl(work), site.url).href.replace('https://', '')}
+        </p>
       </div>
     </div>
   </article>
@@ -214,6 +223,10 @@ const jsonLd = {
     background: var(--paper);
     padding: clamp(1.25rem, 0.5rem + 4vw, 4.5rem);
     min-height: min(80vh, 52rem);
+  }
+  .plate-zoom {
+    display: contents;
+    cursor: zoom-in;
   }
   .plate :global(img) {
     max-height: calc(min(80vh, 52rem) - 2 * clamp(1.25rem, 0.5rem + 4vw, 4.5rem));
@@ -304,4 +317,67 @@ const jsonLd = {
       position: static;
     }
   }
+  .print-only {
+    display: none;
+  }
 </style>
+
+<style is:global>
+  /* Spec sheet: printing a work page (or "Save as PDF") gives one clean page. */
+  @media print {
+    @page {
+      margin: 0.5in;
+    }
+    body {
+      background: #fff;
+    }
+    .header,
+    .footer,
+    .ask-launch,
+    .crumbs,
+    .actions,
+    .tools,
+    .assurances,
+    .inquiry,
+    .more,
+    .skip {
+      display: none !important;
+    }
+    .work {
+      display: block !important;
+    }
+    main > section,
+    dialog {
+      display: none !important;
+    }
+    .plate {
+      min-height: 0 !important;
+      padding: 0 !important;
+      background: none !important;
+      margin: 0 0 0.3in !important;
+      break-inside: avoid;
+    }
+    .plate img {
+      max-height: 5.2in !important;
+      box-shadow: none !important;
+    }
+    .plate + .plate {
+      display: none;
+    }
+    .info .sticky {
+      position: static !important;
+    }
+    .info .title {
+      font-size: 32pt !important;
+    }
+    .print-only {
+      display: block !important;
+      margin-top: 0.3in;
+      padding-top: 0.15in;
+      border-top: 1px solid #ccc;
+      font: 500 9pt var(--font-mono);
+      color: #444;
+    }
+  }
+</style>
+

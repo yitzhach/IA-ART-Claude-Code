@@ -1,0 +1,178 @@
+---
+/**
+ * Work page tools: full-screen close-up of the surface, share (designers send works to clients),
+ * and a one-page spec sheet via the browser's print / save-as-PDF.
+ */
+import { getImage } from 'astro:assets';
+import { type Work, displayTitle } from '~/lib/works';
+
+interface Props {
+  work: Work;
+}
+const { work } = Astro.props;
+const title = displayTitle(work);
+const full = await Promise.all(
+  work.data.images.map((img) => getImage({ src: img, width: Math.min(2400, img.width), format: 'webp', quality: 86 })),
+);
+---
+
+<div class="tools" role="group" aria-label="Tools">
+  <button type="button" class="tool" data-zoom-open="0">Close-up</button>
+  <button type="button" class="tool" data-share data-title={title}>Share</button>
+  <button type="button" class="tool" data-print>Spec sheet (PDF)</button>
+  <span class="tool-status mono" role="status" aria-live="polite" data-tool-status></span>
+</div>
+
+<dialog class="zoom" aria-label={`${title} — close-up`} data-zoom data-sources={JSON.stringify(full.map((f) => f.src))}>
+  <button class="zoom-close" type="button" data-zoom-close aria-label="Close">×</button>
+  <div class="zoom-stage" data-zoom-stage>
+    <img data-zoom-img alt={`${title}, full resolution`} />
+  </div>
+  <p class="zoom-hint mono">Tap to zoom in · scroll or drag to explore the surface</p>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-zoom]');
+  if (dialog) {
+    const stage = dialog.querySelector<HTMLElement>('[data-zoom-stage]')!;
+    const img = dialog.querySelector<HTMLImageElement>('[data-zoom-img]')!;
+    const sources: string[] = JSON.parse(dialog.dataset.sources!);
+
+    const open = (i: number) => {
+      img.src = sources[i] ?? sources[0];
+      stage.classList.remove('is-zoomed');
+      dialog.showModal();
+    };
+    document.querySelectorAll<HTMLElement>('[data-zoom-open]').forEach((el) =>
+      el.addEventListener('click', () => open(Number(el.dataset.zoomOpen) || 0)),
+    );
+    dialog.querySelector('[data-zoom-close]')!.addEventListener('click', () => dialog.close());
+    stage.addEventListener('click', (e) => {
+      const zoomed = stage.classList.toggle('is-zoomed');
+      if (zoomed) {
+        // Keep the tapped point under the finger.
+        const r = img.getBoundingClientRect();
+        const fx = (e.clientX - r.left) / r.width;
+        const fy = (e.clientY - r.top) / r.height;
+        requestAnimationFrame(() => {
+          stage.scrollLeft = fx * img.scrollWidth - stage.clientWidth / 2;
+          stage.scrollTop = fy * img.scrollHeight - stage.clientHeight / 2;
+        });
+      }
+    });
+  }
+
+  const status = document.querySelector<HTMLElement>('[data-tool-status]');
+  document.querySelector<HTMLButtonElement>('[data-share]')?.addEventListener('click', async (e) => {
+    const title = (e.currentTarget as HTMLElement).dataset.title!;
+    const data = { title: `${title} — Isaac Anderson`, url: location.href.split('#')[0] };
+    if (navigator.share) {
+      try {
+        await navigator.share(data);
+        return;
+      } catch {
+        /* cancelled */
+        return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(data.url);
+      if (status) status.textContent = 'Link copied';
+    } catch {
+      if (status) status.textContent = data.url;
+    }
+  });
+  document.querySelector('[data-print]')?.addEventListener('click', () => print());
+</script>
+
+<style>
+  .tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.25rem;
+  }
+  .tool {
+    min-height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: 500 0.6875rem / 1 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--line);
+  }
+  .tool:hover {
+    color: var(--rust);
+    text-decoration-color: currentColor;
+  }
+  .tool-status {
+    color: #2f6b45;
+    font-size: 0.75rem;
+  }
+
+  .zoom {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    background: #121110;
+    color: var(--plaster);
+  }
+  .zoom::backdrop {
+    background: #121110;
+  }
+  .zoom-close {
+    position: fixed;
+    top: calc(0.75rem + env(safe-area-inset-top));
+    right: 0.75rem;
+    z-index: 2;
+    width: 3rem;
+    height: 3rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.12);
+    color: var(--plaster);
+    font-size: 1.6rem;
+  }
+  .zoom-stage {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    display: grid;
+    place-items: center;
+    cursor: zoom-in;
+    overscroll-behavior: contain;
+  }
+  .zoom-stage img {
+    max-width: 100%;
+    max-height: 100dvh;
+    object-fit: contain;
+  }
+  .zoom-stage.is-zoomed {
+    place-items: start;
+    cursor: zoom-out;
+  }
+  .zoom-stage.is-zoomed img {
+    max-width: none;
+    max-height: none;
+  }
+  .zoom-hint {
+    position: fixed;
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+    left: 50%;
+    translate: -50% 0;
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.55);
+    font-size: 0.6875rem;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+</style>
