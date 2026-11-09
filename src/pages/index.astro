@@ -33,7 +33,8 @@ const jsonLd = artistSchema();
 <Base jsonLd={jsonLd}>
   <section class="hero">
     <div class="wrap hero-head">
-      <p class="eyebrow">Sculptural studio — cement · plaster · steel</p>
+      {/* Non-breaking spaces: on phones this wraps after the dash, never before a "·". */}
+      <p class="eyebrow">Sculptural studio&nbsp;— cement&nbsp;·&nbsp;plaster&nbsp;·&nbsp;steel</p>
       <h1 class="display">
         Isaac <span class="outline">Anderson</span>
       </h1>

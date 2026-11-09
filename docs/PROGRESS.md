@@ -176,3 +176,17 @@ Isaac uploaded three images to `main` overnight (`images/library/8-jbpg-3000.web
 `img-6658.webp`). All three were already recovered from the Claude Design project and handled on `v2`: `img-6658`
 is the catalogue work `untitled-figurative-14`; `8-jbpg-3000` duplicates the second photo of `untitled-figurative-13`;
 `final-6003512` is a room photo (unused). `main` itself is left untouched.
+
+### 2026-11-09 07:05–07:15 ET — session 4
+- Health check on a fresh clone: `npm ci`, `npm run check` (0 errors), `npm test` (41 pass, 9 skipped) — all green.
+- **`npm audit` flags 5 advisories** in the build tooling: Astro 5.18.2 (11 advisories; worst rated critical, code
+  execution via AVIF image optimisation), sharp 0.34.5 (libvips/libheif/librsvg), zod 3.25.76 (memory exhaustion),
+  esbuild (Windows dev server only). Checked each against this site: **none reach visitors** — the output is static
+  (the SSR-only ones don't apply); no `define:vars`, server islands, hydrated islands or MDX; no AVIF/HEIC/SVG source
+  images; the Worker doesn't use zod. The fixes need Astro ≥ 7.3.2 and sharp ≥ 0.35.5 (no Astro 5 backports), so
+  upgrading is a contained job — recommended before go-live; offered to Isaac.
+- Phone home page: the "Sculptural studio — cement · plaster · steel" line wrapped with "· steel" alone on line 2;
+  non-breaking spaces now make it wrap after the dash (checked on iPhone 13 and 320px, no overflow).
+- Cloud-session notes: the Cloudflare API connector is signed in to Isaac's account (read-only check, nothing changed);
+  this sandbox can't reach api.cloudflare.com, so a deploy from a cloud session needs a Cloudflare API token saved as
+  a network credential — or Isaac deploys from his own computer.

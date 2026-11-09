@@ -163,6 +163,9 @@ Claude client; and build scans (no inline scripts/styles, unique view-transition
   rejected (bigger than WebP on these textured surfaces).
 - The empty `shows` collection prints a harmless "collection is empty" warning during builds.
 - `/studio.html` (v1's private image tool) was dropped; its URL redirects home.
+- **`npm audit`: 5 advisories** in build tooling (Astro 5.18.2, sharp 0.34.5, zod, esbuild). None reach visitors
+  (static output; the affected features aren't used — see PROGRESS, session 4). Fixes need Astro ≥ 7.3.2 and
+  sharp ≥ 0.35.5; upgrading before go-live is recommended (offered to Isaac 9 Nov).
 
 ---
 
@@ -173,6 +176,10 @@ Claude client; and build scans (no inline scripts/styles, unique view-transition
 - The clone may track only `main`. If `git status` shows no upstream for `v2`:
   `git config --add remote.origin.fetch '+refs/heads/v2:refs/remotes/origin/v2' && git fetch origin && git branch -u origin/v2`.
 - GitHub prints "This repository moved" on push (case change in the repo name) — harmless.
+- The **Cloudflare API connector** is signed in to Isaac's account (fine for read-only checks), but this sandbox
+  blocks `api.cloudflare.com`, and 167 MB of assets can't go through the connector. To deploy from a cloud session,
+  ask for a Cloudflare API token as a network credential for `api.cloudflare.com` (then `wrangler deploy` works with
+  a dummy `CLOUDFLARE_API_TOKEN`); otherwise Isaac deploys from his computer. Only with his go-ahead either way.
 - Playwright: `@playwright/test` is pinned to 1.63.0 to match the preinstalled browser; don't run `playwright install`
   in the cloud sandbox.
 - To test Ask AI end to end without a key: run a tiny mock of `POST /v1/messages` and start
