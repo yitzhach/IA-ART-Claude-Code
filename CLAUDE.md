@@ -20,7 +20,7 @@ Run `npm run check && npm test` before every commit that changes code.
 
 - Catalogue: `src/content/works/<slug>/index.md` + images; schema and field docs in `src/content.config.ts`.
   Sizes are **width × height in inches**. Folder name = URL.
-- Contact details, nav, collection blurbs: `src/lib/site.ts`. Assistant FAQ: `src/lib/faq.ts`.
+- Contact details, nav, collection blurbs: `src/lib/site.ts`. Assistant FAQ: `src/content/faq.yaml`.
 - Design tokens: top of `src/styles/global.css`. Components use tokens; no inline styles.
 - Browser scripts: `src/scripts/` (inquiry list, Ask AI, wall view). Worker: `worker/`.
 - Plans and status: `docs/V2-PLAN.md`, `docs/PROGRESS.md`, `docs/CONTENT-NEEDED.md`, `docs/AUDIT.md`.

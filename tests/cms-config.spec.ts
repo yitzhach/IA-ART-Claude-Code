@@ -7,10 +7,12 @@ test('web editor fields match the catalogue schema', () => {
   const schema = readFileSync('src/content.config.ts', 'utf8');
   const config = readFileSync('public/admin/config.yml', 'utf8');
   const schemaFields = [...schema.matchAll(/^ {6}(\w+): z\./gm)].map((m) => m[1]).sort();
-  const worksBlock = config.slice(config.indexOf('- name: works'));
-  const configFields = [...worksBlock.matchAll(/name: (\w+)/g)]
+  const start = config.indexOf('  - name: works');
+  const end = config.indexOf('\n  - name: ', start + 1);
+  const worksBlock = config.slice(start, end === -1 ? undefined : end);
+  const configFields = [...worksBlock.matchAll(/^ {6}- name: (\w+)/gm)]
     .map((m) => m[1])
-    .filter((n) => n !== 'works' && n !== 'image' && n !== 'body')
+    .filter((n) => n !== 'body')
     .sort();
   expect(configFields).toEqual(schemaFields);
 });

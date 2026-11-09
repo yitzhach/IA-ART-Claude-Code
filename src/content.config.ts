@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { file, glob } from 'astro/loaders';
 
 /**
  * The catalogue. One folder per artwork:
@@ -54,4 +54,16 @@ const works = defineCollection({
     }),
 });
 
-export const collections = { works };
+/** Ask AI's preloaded answers — src/content/faq.yaml (also editable in the web editor). */
+const faq = defineCollection({
+  loader: file('src/content/faq.yaml'),
+  schema: z.object({
+    q: z.string(),
+    a: z.string(),
+    keywords: z.array(z.string()).min(1),
+    links: z.array(z.object({ label: z.string(), href: z.string() })).default([]),
+    chip: z.boolean().default(false),
+  }),
+});
+
+export const collections = { works, faq };

@@ -49,8 +49,8 @@ Not sure what a work is missing? `npm run content:report` writes a checklist to 
 
 ### The web editor (phone or computer)
 
-**isaacandersonart.com/admin/** is a visual editor for the catalogue: change prices and status, upload photos,
-add new works, reorder. Each save is committed to GitHub and the site rebuilds itself (once Cloudflare builds
+**isaacandersonart.com/admin/** is a visual editor for the catalogue and the assistant's answers: change prices
+and status, upload photos, add new works, reorder, edit what Ask AI says. Each save is committed to GitHub and the site rebuilds itself (once Cloudflare builds
 are connected — see Deploying, step 3).
 
 One-time setup (about two minutes):
@@ -69,8 +69,8 @@ You can also make any edit on github.com (open the file → pencil icon → comm
 
 ## Ask AI and "View on your wall"
 
-**Ask AI** (the button on every page) answers common questions instantly from `src/lib/faq.ts` —
-edit that file to change or add answers. Questions the FAQ doesn't cover go to Claude through the
+**Ask AI** (the button on every page) answers common questions instantly from `src/content/faq.yaml` —
+edit it in the web editor (**Assistant answers**) or on GitHub to change or add answers. Questions the FAQ doesn't cover go to Claude through the
 small Worker in `worker/`, which only knows what's in the catalogue and FAQ (it is told never to
 invent prices, sizes or policies) and hands anything else to the studio.
 
@@ -135,12 +135,14 @@ src/
   layouts/Base.astro       <head> (titles, share previews), header, footer
   components/              Header, Footer, WorkCard, WorkGrid, ArtImage, InquiryForm,
                            InquiryList, AddToList, AskAI, WallView
-  lib/faq.ts               the assistant's preloaded answers
+  content/faq.yaml         Ask AI's preloaded answers (editable in /admin/)
+  lib/faq.ts               loads the answers for the site and the assistant
   pages/                   one file per page; works/[slug].astro makes every artwork page
   styles/global.css        design tokens (colour, type, spacing) and shared styles
   scripts/                 browser scripts: inquiry list, Ask AI, wall view, scroll reveal
   assets/site/             site photography (hero, interiors, process, portrait)
 public/                    files served as-is (icons, robots.txt, _headers, _redirects)
+public/admin/              the web editor (Sveltia CMS) and its config.yml
 worker/                    Cloudflare Worker: /api/ask (Ask AI); everything else is static
 tests/                     Playwright browser tests (pages, inquiry list, Ask AI, wall view)
 docs/                      audit, plan, progress log, content checklist

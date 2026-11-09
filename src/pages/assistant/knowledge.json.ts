@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getImage } from 'astro:assets';
-import { faq } from '~/lib/faq';
+import { getFaq } from '~/lib/faq';
 import { site, collectionInfo } from '~/lib/site';
 import { getWorks, workUrl, refTitle, sizeLabel, sizeLabelCm, priceLabel, collectionsLabel } from '~/lib/works';
 
@@ -11,6 +11,7 @@ import { getWorks, workUrl, refTitle, sizeLabel, sizeLabelCm, priceLabel, collec
  */
 export const GET: APIRoute = async () => {
   const works = await getWorks();
+  const faq = await getFaq();
   const items = await Promise.all(
     works.map(async (w) => {
       const thumb = await getImage({ src: w.data.images[0], width: 320, format: 'webp', quality: 72 });

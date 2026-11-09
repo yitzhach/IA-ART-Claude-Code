@@ -1,4 +1,4 @@
-# Web editor for the catalogue (Sveltia CMS). Open isaacandersonart.com/admin/ and sign in with GitHub.
+# Web editor for the site (Sveltia CMS). Open isaacandersonart.com/admin/ and sign in with GitHub.
 # Every save is a commit to the branch below; Cloudflare rebuilds the site from it.
 backend:
   name: github
@@ -23,39 +23,139 @@ collections:
     summary: '{{title}} · {{status}}'
     sortable_fields: [order, title, status]
     fields:
-      - { label: Title, name: title, widget: string, required: false, hint: Leave empty if the piece is untitled. }
-      - label: Collections
-        name: collections
+      - name: title
+        label: Title
+        widget: string
+        required: false
+        hint: Leave empty if the piece is untitled.
+      - name: collections
+        label: Collections
         widget: select
         multiple: true
         options:
           - { label: Abstract, value: abstract }
           - { label: Figurative, value: figurative }
           - { label: Sculptural, value: sculptural }
-      - label: Status
-        name: status
+      - name: status
+        label: Status
         widget: select
         default: inquire
         options:
-          - { label: Available — for sale now, value: available }
-          - { label: Reserved — on hold for a buyer, value: reserved }
+          - { label: 'Available — for sale now', value: available }
+          - { label: 'Reserved — on hold for a buyer', value: reserved }
           - { label: Sold, value: sold }
           - { label: Private commission, value: commission }
-          - { label: Not confirmed — visitors ask, value: inquire }
-      - { label: Price (US dollars), name: price, widget: number, value_type: int, required: false, hint: Leave empty to show "Price on request". }
-      - { label: Buy now link, name: buyLink, widget: string, required: false, hint: Optional Stripe Payment Link. Adds a Buy now button when the work is available. }
-      - { label: Width (inches), name: width, widget: number, value_type: float, required: false }
-      - { label: Height (inches), name: height, widget: number, value_type: float, required: false }
-      - { label: Depth (inches), name: depth, widget: number, value_type: float, required: false }
-      - { label: Medium, name: medium, widget: string, required: false, hint: e.g. Cement, plaster and pigment on panel }
-      - { label: Year, name: year, widget: number, value_type: int, required: false }
-      - label: Photos
-        name: images
+          - { label: 'Not confirmed — visitors ask', value: inquire }
+      - name: price
+        label: Price (US dollars)
+        widget: number
+        value_type: int
+        required: false
+        hint: 'Leave empty to show "Price on request".'
+      - name: buyLink
+        label: Buy now link
+        widget: string
+        required: false
+        hint: Optional Stripe Payment Link. Adds a Buy now button when the work is available.
+      - name: width
+        label: Width (inches)
+        widget: number
+        value_type: float
+        required: false
+      - name: height
+        label: Height (inches)
+        widget: number
+        value_type: float
+        required: false
+      - name: depth
+        label: Depth (inches)
+        widget: number
+        value_type: float
+        required: false
+      - name: medium
+        label: Medium
+        widget: string
+        required: false
+        hint: 'For example: Cement, plaster and pigment on panel'
+      - name: year
+        label: Year
+        widget: number
+        value_type: int
+        required: false
+      - name: images
+        label: Photos
         widget: list
         min: 1
-        field: { label: Photo, name: image, widget: image }
-      - { label: Description (what it looks like), name: alt, widget: text, required: false, hint: Read aloud to blind visitors and used by Ask AI to find works by colour or motif. }
-      - { label: Show on home page, name: featured, widget: boolean, default: false, required: false }
-      - { label: Order, name: order, widget: number, value_type: int, default: 1000, hint: Lower numbers come first. }
-      - { label: Statement, name: body, widget: markdown, required: false, hint: A sentence or two about the piece. }
-      - { label: Old v1 references, name: v1, widget: list, required: false, hint: Reference only — leave as is. }
+        field:
+          name: image
+          label: Photo
+          widget: image
+      - name: alt
+        label: Description (what it looks like)
+        widget: text
+        required: false
+        hint: Read aloud to blind visitors and used by Ask AI to find works by colour or motif.
+      - name: featured
+        label: Show on home page
+        widget: boolean
+        default: false
+        required: false
+      - name: order
+        label: Order
+        widget: number
+        value_type: int
+        default: 1000
+        hint: Lower numbers come first.
+      - name: body
+        label: Statement
+        widget: markdown
+        required: false
+        hint: A sentence or two about the piece.
+      - name: v1
+        label: Old v1 references
+        widget: list
+        required: false
+        hint: Reference only — leave as is.
+
+  - name: settings
+    label: Assistant answers
+    description: What Ask AI answers instantly. Only write what is true for the studio.
+    files:
+      - name: faq
+        label: Assistant answers (FAQ)
+        file: src/content/faq.yaml
+        fields:
+          - name: questions
+            label: Questions
+            widget: list
+            root: true
+            summary: '{{fields.q}}'
+            fields:
+              - name: id
+                label: 'ID — short and unique, letters and dashes'
+                widget: string
+              - name: q
+                label: Question
+                widget: string
+              - name: a
+                label: Answer
+                widget: text
+              - name: keywords
+                label: Keywords visitors might use
+                widget: list
+              - name: links
+                label: Buttons under the answer
+                widget: list
+                required: false
+                fields:
+                  - name: label
+                    label: Label
+                    widget: string
+                  - name: href
+                    label: Link
+                    widget: string
+              - name: chip
+                label: Offer as a suggestion
+                widget: boolean
+                default: false
+                required: false

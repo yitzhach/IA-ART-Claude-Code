@@ -86,6 +86,11 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   own CSP in workerd with zero violations; a test keeps its fields in step with the catalogue schema.
 - Fair page shows three show photos; removed unused code/images.
 
+### 2026-11-09 02:26–02:30 ET — session 2 (continued)
+- **FAQ moved to `src/content/faq.yaml`** (a typed content collection) so it's editable in the web editor
+  (**Assistant answers**) as well as on GitHub. Rewrote the editor config in block YAML (a comma inside an inline
+  label had been splitting it into extra options). Editor boots clean; all tests pass.
+
 ## Morning summary for Isaac
 
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched
