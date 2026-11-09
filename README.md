@@ -133,6 +133,8 @@ src/
   content.config.ts        what fields a work can have (and their rules)
   lib/site.ts              contact details, navigation, collection descriptions
   lib/works.ts             helpers: titles, sizes, prices, related works
+  lib/shows.ts             upcoming / past shows
+  lib/structured-data.ts   schema.org data for Google (artist, artworks, breadcrumbs)
   layouts/Base.astro       <head> (titles, share previews), header, footer
   components/              Header, Footer, WorkCard, WorkGrid, ArtImage, InquiryForm,
                            InquiryList, AddToList, AskAI, WallView
@@ -140,6 +142,7 @@ src/
   lib/faq.ts               loads the answers for the site and the assistant
   pages/                   one file per page; works/[slug].astro makes every artwork page
   styles/global.css        design tokens (colour, type, spacing) and shared styles
+  styles/spec-sheet.css    how a work page prints (the one-page spec sheet)
   scripts/                 browser scripts: inquiry list, Ask AI, wall view, scroll reveal
   assets/site/             site photography (hero, interiors, process, portrait)
 public/                    files served as-is (icons, robots.txt, _headers, _redirects)

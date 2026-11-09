@@ -6,6 +6,7 @@ import InquiryForm from '~/components/InquiryForm.astro';
 import { site, collectionInfo, type CollectionKey } from '~/lib/site';
 import { getWorks, inCollection, altText } from '~/lib/works';
 import { getShows, showDates } from '~/lib/shows';
+import { artistSchema } from '~/lib/structured-data';
 import hero from '~/assets/site/hero-macro.webp';
 import lobby from '~/assets/site/object-014.webp';
 import dining from '~/assets/site/insitu-collection.webp';
@@ -29,15 +30,7 @@ const collections = (Object.keys(collectionInfo) as CollectionKey[]).map((key) =
   return { key, ...collectionInfo[key], count: items.length, cover: items[0] };
 });
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Isaac Anderson',
-  jobTitle: 'Sculptor',
-  url: site.url,
-  sameAs: [site.instagram.href],
-  knowsAbout: ['Sculpture', 'Cement', 'Plaster', 'Mixed media', 'Site-specific art'],
-};
+const jsonLd = artistSchema();
 ---
 
 <Base jsonLd={jsonLd}>
