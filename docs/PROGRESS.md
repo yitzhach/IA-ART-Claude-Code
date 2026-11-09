@@ -97,6 +97,12 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   adds real entries (his Show Ledger artifact has the 2027 Florida season — copy on request). Dates format correctly
   across months and years (tested with sample data, then removed).
 
+### 2026-11-09 02:33–02:36 ET — session 2 (continued)
+- Home shows a "Next show" line and collection pages link to their available works — both only when relevant.
+- **Worker unit tests** (`tests/worker.spec.ts`): input limits, byte-identical cached prompt, request shape
+  (model, effort, JSON schema, fallbacks, cache marker), reply filtering and hand-off on refusal/truncation/bad JSON.
+  37 tests pass.
+
 ## Morning summary for Isaac
 
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched

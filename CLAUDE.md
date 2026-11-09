@@ -14,7 +14,8 @@ npm run content:report  # regenerate docs/CONTENT-NEEDED.md after touching works
 npm run dev:worker      # site + Worker in workerd (Ask AI needs --var ANTHROPIC_API_KEY:…)
 ```
 
-Run `npm run check && npm test` before every commit that changes code.
+Run `npm run check && npm test` before every commit that changes code. `tests/worker.spec.ts` unit-tests the Ask AI
+Worker with a fake Claude client (no key or network needed).
 
 ## Where things live
 
