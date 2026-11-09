@@ -42,6 +42,7 @@ A sentence or two about the piece. Optional — shown on the work's page.
 | **Reorder** | Change `order:` numbers. |
 | **Feature on the home page** | Add `featured: true` (up to 8 are shown). |
 | **Add a "Buy now" button** | Create a Stripe Payment Link and add `buyLink: https://buy.stripe.com/…` to an available work. |
+| **Add a show or exhibition** | In the web editor → Shows, or `src/content/shows.yaml`. Upcoming ones appear on the fair page; past ones on About. |
 | **Change phone, email, Instagram, nav** | `src/lib/site.ts` |
 | **Change colours or fonts** | `src/styles/global.css` (the top of the file) |
 

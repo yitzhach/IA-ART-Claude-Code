@@ -75,7 +75,9 @@ Fill in what you know; anything left blank is simply not shown on the site (no p
 - [ ] **Possibly the same piece:** \`untitled-abstract-04\` and \`untitled-sculptural-09\` both show a grey panel with a
       small inset photo of a lone tree — one photo framed, one not. Same work? (\`untitled-abstract-06\` turned out to be
       Green Horizon and has been merged into it.)
-- [ ] **Shows & fairs:** upcoming show dates would help art-fair visitors find you again.
+- [ ] **Shows & fairs:** add upcoming shows (web editor → Shows) so art-fair visitors can find you again, and past
+      exhibitions for the About page. Your Show Ledger artifact has the 2027 Florida season — say the word and Claude
+      will copy it in.
 - [ ] **Unused photos:** \`src/assets/site/hero-macro-2/3/6.webp\` look like finished works (or close-ups), and
       \`process-hero-2.webp\` shows a horizon triptych — none are in the catalogue. Should they be?
 

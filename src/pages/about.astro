@@ -3,6 +3,8 @@ import Base from '~/layouts/Base.astro';
 import ArtImage from '~/components/ArtImage.astro';
 import InquiryForm from '~/components/InquiryForm.astro';
 import { site } from '~/lib/site';
+import { getShows } from '~/lib/shows';
+import ShowList from '~/components/ShowList.astro';
 import portrait from '~/assets/site/process-01-material.webp';
 import studio from '~/assets/site/about-studio.webp';
 
@@ -12,6 +14,8 @@ const facts = [
   { k: 'Works to', v: 'Commission · available catalogue' },
   { k: 'Education', v: 'Edmonds, WA · Carnforth, England · Chicago, IL' },
 ];
+
+const { upcoming, past } = await getShows();
 
 const methods = [
   'Lime, cement, plaster, raw pigment, geopolymer',
@@ -93,6 +97,15 @@ const methods = [
     </div>
   </section>
 
+  {
+    (upcoming.length > 0 || past.length > 0) && (
+      <section class="wrap section cv">
+        <ShowList shows={upcoming} heading="Upcoming shows" />
+        <ShowList shows={past.slice(0, 12)} heading="Selected exhibitions" />
+      </section>
+    )
+  }
+
   <section class="wrap section--tight">
     <InquiryForm source="About page" />
   </section>
@@ -161,6 +174,11 @@ const methods = [
   }
   .section--tight {
     padding-bottom: var(--section);
+  }
+  .cv {
+    display: grid;
+    gap: var(--section);
+    padding-top: 0;
   }
   @media (max-width: 899px) {
     .bio,

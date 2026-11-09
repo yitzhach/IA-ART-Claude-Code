@@ -1,0 +1,79 @@
+---
+/** A list of shows (upcoming or past). Renders nothing when the list is empty. */
+import { type Show, showDates } from '~/lib/shows';
+
+interface Props {
+  shows: Show[];
+  heading: string;
+  eyebrow?: string;
+}
+const { shows, heading, eyebrow } = Astro.props;
+---
+
+{
+  shows.length > 0 && (
+    <section class="shows-list" aria-label={heading}>
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h2 class="title">{heading}</h2>
+      <ul>
+        {shows.map((s) => (
+          <li>
+            <span class="date mono">{showDates(s)}</span>
+            <span class="name">
+              {s.data.url ? (
+                <a href={s.data.url} rel="noopener">
+                  {s.data.name}
+                </a>
+              ) : (
+                s.data.name
+              )}
+            </span>
+            <span class="where">{[s.data.venue, s.data.city].filter(Boolean).join(', ')}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .shows-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .title {
+    margin-bottom: 0.75rem;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  li {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.5rem 1.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .date {
+    color: var(--rust);
+  }
+  .name {
+    font: 400 1.125rem var(--font-serif);
+  }
+  .name a:hover {
+    color: var(--rust);
+  }
+  .where {
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+  @media (max-width: 699px) {
+    li {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.2rem;
+    }
+  }
+</style>

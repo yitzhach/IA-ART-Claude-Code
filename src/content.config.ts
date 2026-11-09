@@ -66,4 +66,18 @@ const faq = defineCollection({
   }),
 });
 
-export const collections = { works, faq };
+/** Shows, fairs and exhibitions — src/content/shows.yaml (also editable in the web editor). */
+const shows = defineCollection({
+  loader: file('src/content/shows.yaml'),
+  schema: z.object({
+    name: z.string(),
+    venue: z.string().optional(),
+    city: z.string(),
+    start: z.coerce.date(),
+    end: z.coerce.date().optional(),
+    url: z.string().url().optional(),
+    kind: z.enum(['fair', 'exhibition', 'open-studio']).default('fair'),
+  }),
+});
+
+export const collections = { works, faq, shows };

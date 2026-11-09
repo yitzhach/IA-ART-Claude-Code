@@ -9,6 +9,8 @@ import WorkGrid from '~/components/WorkGrid.astro';
 import InquiryForm from '~/components/InquiryForm.astro';
 import { site } from '~/lib/site';
 import { getWorks } from '~/lib/works';
+import { getShows } from '~/lib/shows';
+import ShowList from '~/components/ShowList.astro';
 import booth from '~/assets/site/show-booth.webp';
 import showWalls from '~/assets/site/show-hero-2.webp';
 import showPanels from '~/assets/site/shows-1-full.webp';
@@ -16,6 +18,7 @@ import showPanels from '~/assets/site/shows-1-full.webp';
 const works = await getWorks();
 const available = works.filter((w) => w.data.status === 'available');
 const sms = site.phone.href.replace('tel:', 'sms:');
+const { upcoming } = await getShows();
 ---
 
 <Base
@@ -67,6 +70,14 @@ const sms = site.phone.href.replace('tel:', 'sms:');
       <a class="link" href="/commissions/">How commissions work →</a>
     </div>
   </section>
+
+  {
+    upcoming.length > 0 && (
+      <div class="wrap section--tight upcoming">
+        <ShowList shows={upcoming} heading="Where to find Isaac next" eyebrow="Upcoming shows" />
+      </div>
+    )
+  }
 
   <section class="wrap section--tight">
     <InquiryForm

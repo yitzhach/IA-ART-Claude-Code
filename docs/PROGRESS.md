@@ -91,6 +91,12 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   (**Assistant answers**) as well as on GitHub. Rewrote the editor config in block YAML (a comma inside an inline
   label had been splitting it into extra options). Editor boots clean; all tests pass.
 
+### 2026-11-09 02:30–02:33 ET — session 2 (continued)
+- **Shows & exhibitions** (`src/content/shows.yaml`, editable in the web editor → Shows): upcoming shows appear on
+  `/fair/` and About; past ones become "Selected exhibitions" on About. Empty for now, so nothing renders until Isaac
+  adds real entries (his Show Ledger artifact has the 2027 Florida season — copy on request). Dates format correctly
+  across months and years (tested with sample data, then removed).
+
 ## Morning summary for Isaac
 
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched

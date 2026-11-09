@@ -1,0 +1,10 @@
+# Shows, fairs and exhibitions. Upcoming ones appear on /fair/ (and the About page lists past ones as
+# "Selected exhibitions"). Nothing is shown until there's an entry. Edit here or in /admin/ → Shows.
+#   id     short unique name, e.g. coconut-grove-2027
+#   name   the show or exhibition
+#   venue  optional — gallery or location name
+#   city   e.g. Coconut Grove, FL
+#   start  first day, YYYY-MM-DD;  end: last day (optional)
+#   url    optional link
+#   kind   fair | exhibition | open-studio
+[]

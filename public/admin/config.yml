@@ -159,3 +159,56 @@ collections:
                 widget: boolean
                 default: false
                 required: false
+
+  - name: shows
+    label: Shows
+    description: Fairs, exhibitions and open studios. Upcoming ones appear on the fair page; past ones on About.
+    files:
+      - name: shows
+        label: Shows and exhibitions
+        file: src/content/shows.yaml
+        fields:
+          - name: shows
+            label: Shows
+            widget: list
+            root: true
+            summary: '{{fields.start}} · {{fields.name}}'
+            fields:
+              - name: id
+                label: 'ID — short and unique, e.g. coconut-grove-2027'
+                widget: string
+              - name: name
+                label: Show or exhibition
+                widget: string
+              - name: venue
+                label: Venue
+                widget: string
+                required: false
+              - name: city
+                label: City
+                widget: string
+              - name: start
+                label: First day
+                widget: datetime
+                time_format: false
+                date_format: YYYY-MM-DD
+                format: YYYY-MM-DD
+              - name: end
+                label: Last day
+                widget: datetime
+                time_format: false
+                date_format: YYYY-MM-DD
+                format: YYYY-MM-DD
+                required: false
+              - name: url
+                label: Link
+                widget: string
+                required: false
+              - name: kind
+                label: Type
+                widget: select
+                default: fair
+                options:
+                  - { label: Art fair, value: fair }
+                  - { label: Exhibition, value: exhibition }
+                  - { label: Open studio, value: open-studio }
