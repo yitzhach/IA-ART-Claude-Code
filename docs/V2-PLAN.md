@@ -42,22 +42,22 @@
 ## Phases
 
 ### Phase 1 — Foundation  ← tonight
-- [ ] Astro project scaffold, pinned deps, `npm run dev / build / preview`, `.gitignore`, README
-- [ ] Design tokens + global CSS ported from v1 (fonts, palette, type scale)
-- [ ] Layout: `<head>` with title/description/OG/canonical, nav (desktop + mobile), footer
-- [ ] Catalogue schema (`src/content.config.ts`) + migration of every v1 artwork, de-duplicated
-- [ ] Pages ported: Home, Works, Collections ×3, Commissions, Process, About, 404
-- [ ] All v1 phone bugs fixed (form overflow, hero overlap, back-to-top overlap)
-- [ ] No placeholder ever renders — missing fields are simply omitted
-- [ ] `robots.txt`, sitemap, structured data (VisualArtwork / Offer)
+- [x] Astro project scaffold, pinned deps, `npm run dev / build / preview`, `.gitignore`, README
+- [x] Design tokens + global CSS ported from v1 (fonts, palette, type scale)
+- [x] Layout: `<head>` with title/description/OG/canonical, nav (desktop + mobile), footer
+- [x] Catalogue schema (`src/content.config.ts`) + migration of every v1 artwork, de-duplicated
+- [x] Pages ported: Home, Works, Collections ×3, Commissions, Process, About, 404
+- [x] All v1 phone bugs fixed (form overflow, hero overlap, back-to-top overlap)
+- [x] No placeholder ever renders — missing fields are simply omitted
+- [x] `robots.txt`, sitemap, structured data (VisualArtwork / Offer)
 - [ ] Recover the 2 missing referenced images from the Claude Design project
 
 ### Phase 2 — Buying and inquiring
-- [ ] Work detail pages with status/price rules (`available`, `reserved`, `sold`, `commission`, `nfs`)
-- [ ] Inquiry list across the site + prefilled Formspree form (works, notes, wall size)
-- [ ] Optional `buyLink` per work (Stripe Payment Link) → "Buy now" button
+- [x] Work detail pages with status/price rules (`available`, `reserved`, `sold`, `commission`, `inquire`)
+- [x] Inquiry list across the site + prefilled Formspree form (works, notes, wall size)
+- [x] Optional `buyLink` per work (Stripe Payment Link) → "Buy now" button
 - [ ] Commission form with budget/size/location fields; to-the-trade option for designers
-- [ ] Fold the designer's Available page in as a filtered view (`/works/?status=available`)
+- [x] Fold the designer's Available page in as a filtered view (`/works/?status=available`)
 
 ### Phase 3 — Ask AI
 - [ ] `src/content/faq.yaml` — commission process, lead times, shipping, install, care, materials, pricing guidance
@@ -71,7 +71,7 @@
 
 ### Phase 5 — Operations
 - [ ] Cloudflare Web Analytics (privacy-friendly, free)
-- [ ] Deploy guide (Workers Builds from GitHub, or `wrangler deploy`)
+- [x] Deploy guide (Workers Builds from GitHub, or `wrangler deploy`)
 - [ ] Optional web editor (Keystatic / Decap) so prices and new works can be edited from a phone
 - [ ] Move `/studio.html` off the public site
 
