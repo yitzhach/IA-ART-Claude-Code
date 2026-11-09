@@ -25,3 +25,16 @@ test('shortlist two works and send one inquiry', async ({ page }) => {
   expect(posted).toContain('Lifted Up');
   await expect(page.locator('[data-inquiry-list]')).toBeHidden();
 });
+
+test('header fits a 320px phone once works are saved', async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  await page.goto('/works/green-horizon/');
+  await page.click('[data-add-to-list]');
+  const overflow = await page.evaluate(() =>
+    [...document.querySelectorAll('.header .bar *')].filter((e) => e.getBoundingClientRect().right > document.documentElement.clientWidth).length,
+  );
+  expect(overflow).toBe(0);
+  await expect(page.locator('[data-menu-btn]')).toBeInViewport();
+  await ctx.close();
+});
