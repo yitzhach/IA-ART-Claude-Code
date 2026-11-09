@@ -17,7 +17,7 @@
 |---|---|---|
 | Site generator | **Astro 5** (pinned 5.18.x) | Real HTML at build time (fast, crawlable), zero JS by default, shared components, built-in image pipeline. Upgrade to Astro 7 later is a contained job. |
 | The catalogue | `src/content/works/<slug>/index.md` + that work's images in the same folder | One file per artwork = one place to change price/status/title. Add a work = add a folder. Works with any Git-based CMS later. |
-| Site-wide text | `src/content/site.ts` (contact, studios, nav), `src/content/faq.yaml` | No hunting through page markup for a phone number. |
+| Site-wide text | `src/lib/site.ts` (contact, studios, nav), `src/content/faq.yaml` (assistant answers) | No hunting through page markup for a phone number. |
 | Styling | `src/styles/tokens.css` + `global.css`, scoped component styles | Change a colour or font once. No inline styles. |
 | JavaScript | Small vanilla scripts only where needed: mobile nav, lightbox, filters, inquiry list, Ask AI panel, wall view | Fast on phones; nothing to download before the page shows. |
 | Images | Originals in the work folder; Astro generates AVIF/WebP at several widths with `srcset` | Phones download ~150 KB instead of ~1.3 MB per image. |
