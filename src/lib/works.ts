@@ -60,8 +60,6 @@ export function priceLabel(w: Work): string {
   return 'Price on request';
 }
 
-export const isForSale = (w: Work) => w.data.status === 'available' || w.data.status === 'inquire';
-
 /** "Abstract · Sculptural" */
 export const collectionsLabel = (w: Work) =>
   w.data.collections.map((c) => collectionInfo[c].name).join(' · ');

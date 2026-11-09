@@ -31,7 +31,8 @@ Fill in what you know; anything left blank is simply not shown on the site (no p
       small inset photo of a lone tree — one photo framed, one not. Same work? (`untitled-abstract-06` turned out to be
       Green Horizon and has been merged into it.)
 - [ ] **Shows & fairs:** upcoming show dates would help art-fair visitors find you again.
-- [ ] **Unused photos:** `src/assets/site/hero-macro-2/3/6.webp` look like finished works not in the catalogue — are they?
+- [ ] **Unused photos:** `src/assets/site/hero-macro-2/3/6.webp` look like finished works (or close-ups), and
+      `process-hero-2.webp` shows a horizon triptych — none are in the catalogue. Should they be?
 
 ## Works
 

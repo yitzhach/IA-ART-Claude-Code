@@ -10,6 +10,8 @@ import InquiryForm from '~/components/InquiryForm.astro';
 import { site } from '~/lib/site';
 import { getWorks } from '~/lib/works';
 import booth from '~/assets/site/show-booth.webp';
+import showWalls from '~/assets/site/show-hero-2.webp';
+import showPanels from '~/assets/site/shows-1-full.webp';
 
 const works = await getWorks();
 const available = works.filter((w) => w.data.status === 'available');
@@ -36,9 +38,17 @@ const sms = site.phone.href.replace('tel:', 'sms:');
     </ul>
   </section>
 
-  <figure class="wrap booth">
-    <ArtImage src={booth} alt="Isaac Anderson's booth at an outdoor art show, panels hung on white walls" sizes="(min-width: 1400px) 1312px, 100vw" priority />
-  </figure>
+  <div class="wrap shows" aria-label="Photos from recent shows">
+    <figure class="show-main">
+      <ArtImage src={booth} alt="Isaac Anderson's booth at an outdoor art show, panels hung on white walls" sizes="(min-width: 900px) 60vw, 100vw" priority />
+    </figure>
+    <figure>
+      <ArtImage src={showWalls} alt="Visitors walking past white show walls hung with large textured panels" sizes="(min-width: 900px) 30vw, 50vw" />
+    </figure>
+    <figure>
+      <ArtImage src={showPanels} alt="Freestanding show panels holding several works, with a brick building behind" sizes="(min-width: 900px) 30vw, 50vw" />
+    </figure>
+  </div>
 
   <section class="section wrap" id="available" aria-labelledby="avail-h">
     <header class="head">
@@ -84,10 +94,22 @@ const sms = site.phone.href.replace('tel:', 'sms:');
     flex-wrap: wrap;
     gap: 0.75rem;
   }
-  .booth :global(img) {
+  .shows {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.75rem;
+  }
+  .show-main {
+    grid-row: span 2;
+  }
+  .shows :global(img) {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    height: 100%;
     object-fit: cover;
+  }
+  .show-main :global(img) {
+    aspect-ratio: 4 / 3;
   }
   .head {
     display: flex;
@@ -121,8 +143,15 @@ const sms = site.phone.href.replace('tel:', 'sms:');
     .quick .btn {
       width: 100%;
     }
-    .booth :global(img) {
-      aspect-ratio: 4 / 3;
+    .shows {
+      grid-template-columns: 1fr 1fr;
+    }
+    .show-main {
+      grid-column: span 2;
+      grid-row: auto;
+    }
+    .shows figure:not(.show-main) :global(img) {
+      aspect-ratio: 1;
     }
   }
 </style>
