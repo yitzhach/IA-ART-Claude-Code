@@ -7,7 +7,7 @@ interface Props {
   sizes?: string;
   priority?: boolean;
 }
-const { work, sizes = '(min-width: 1100px) 25vw, (min-width: 700px) 33vw, 50vw', priority = false } = Astro.props;
+const { work, sizes = '(min-width: 1100px) 19vw, (min-width: 700px) 26vw, 40vw', priority = false } = Astro.props;
 const { status } = work.data;
 const meta = [sizeLabel(work), collectionsLabel(work)].filter(Boolean).join(' · ');
 ---

@@ -51,6 +51,15 @@ const details = [
   },
 ].filter(Boolean) as { k: string; v: string; sub?: string }[];
 
+/**
+ * How wide the image actually renders: the plate is height-limited (~760px on desktop, 70% of the screen on
+ * phones), so a tall work needs far fewer pixels than its column width suggests.
+ */
+const plateSizes = (img: { width: number; height: number }) => {
+  const aspect = img.width / img.height;
+  return `(min-width: 1000px) min(55vw, ${Math.round(760 * aspect)}px), min(calc(100vw - 2.5rem), calc((70vh - 2.5rem) * ${aspect.toFixed(3)}))`;
+};
+
 const description = `${summary(work)}. ${d.status === 'sold' ? 'Sold — similar work available by commission.' : priceLabel(work) + '.'} By Isaac Anderson.`;
 
 const jsonLd = {
@@ -97,7 +106,7 @@ const jsonLd = {
               <ArtImage
                 src={img}
                 alt={i === 0 ? altText(work) : `${title} — view ${i + 1}`}
-                sizes="(min-width: 1000px) 60vw, 100vw"
+                sizes={plateSizes(img)}
                 priority={i === 0}
               />
             </button>

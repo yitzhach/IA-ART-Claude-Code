@@ -9,8 +9,8 @@ export default defineConfig({
   build: { format: 'directory', inlineStylesheets: 'never' },
   vite: { build: { assetsInlineLimit: 0 } },
   image: {
-    // Widths generated for artwork srcsets. Phones get ~640px, retina desktop up to 2400px.
-    breakpoints: [480, 640, 960, 1280, 1600, 2000, 2400],
+    // Widths generated for srcsets: small cards on phones get 240–320px, retina desktop up to 2400px.
+    breakpoints: [240, 320, 480, 640, 800, 960, 1280, 1600, 2000, 2400],
   },
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
 });

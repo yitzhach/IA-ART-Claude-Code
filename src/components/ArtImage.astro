@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { src, alt, sizes, priority = false, class: className } = Astro.props;
-const widths = [480, 640, 960, 1280, 1600, 2000, 2400].filter((w) => w <= src.width);
+const widths = [240, 320, 480, 640, 800, 960, 1280, 1600, 2000, 2400].filter((w) => w <= src.width);
 if (!widths.length || widths[widths.length - 1] < src.width) widths.push(src.width);
 ---
 
