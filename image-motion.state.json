@@ -1,0 +1,67 @@
+{
+  "hero-macro": {
+    "p": "diagonal",
+    "k": 6,
+    "d": 18
+  },
+  "hero-macro-2": {
+    "p": "drift-down",
+    "k": 6,
+    "d": 18
+  },
+  "hero-macro-3": {
+    "p": "diagonal",
+    "k": 6,
+    "d": 18
+  },
+  "hero-macro-4": {
+    "p": "diagonal",
+    "k": 6,
+    "d": 18
+  },
+  "hero-macro-5": {
+    "p": "diagonal",
+    "k": 6,
+    "d": 18
+  },
+  "hero-macro-6": {
+    "p": "drift-up",
+    "k": 6,
+    "d": 18
+  },
+  "ref-1": {
+    "p": "push-in",
+    "k": 3,
+    "d": 18
+  },
+  "ref-2": {
+    "p": "push-in",
+    "k": 3,
+    "d": 18
+  },
+  "ref-3": {
+    "p": "diagonal",
+    "k": 6,
+    "d": 18
+  },
+  "ref-4": {
+    "p": "drift-down",
+    "k": 6,
+    "d": 18
+  },
+  "ref-5": {
+    "p": "drift-up",
+    "k": 6,
+    "d": 18
+  },
+  "ref-6": {
+    "p": "drift-down",
+    "k": 6,
+    "d": 18
+  },
+  "ref-7": {
+    "p": "diagonal",
+    "k": 6,
+    "d": 18
+  }
+}

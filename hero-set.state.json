@@ -1,0 +1,72 @@
+{
+  "interval": 6000,
+  "manualHold": 5000,
+  "items": [
+    {
+      "id": "hero-macro",
+      "type": "image",
+      "live": true,
+      "hold": 8,
+      "fade": null,
+      "curve": null,
+      "fx": null,
+      "wipeDir": null,
+      "wipeSoft": null
+    },
+    {
+      "id": "hero-macro-2",
+      "type": "image",
+      "live": true,
+      "hold": 6.4,
+      "fade": null,
+      "curve": null,
+      "fx": null,
+      "wipeDir": null,
+      "wipeSoft": null
+    },
+    {
+      "id": "hero-macro-3",
+      "type": "image",
+      "live": true,
+      "hold": 6.4,
+      "fade": null,
+      "curve": null,
+      "fx": null,
+      "wipeDir": null,
+      "wipeSoft": null
+    },
+    {
+      "id": "hero-macro-4",
+      "type": "image",
+      "live": true,
+      "hold": 6.4,
+      "fade": null,
+      "curve": null,
+      "fx": null,
+      "wipeDir": null,
+      "wipeSoft": null
+    },
+    {
+      "id": "hero-macro-5",
+      "type": "image",
+      "live": true,
+      "hold": 6.4,
+      "fade": null,
+      "curve": null,
+      "fx": null,
+      "wipeDir": null,
+      "wipeSoft": null
+    },
+    {
+      "id": "hero-macro-6",
+      "type": "image",
+      "live": true,
+      "hold": 6.4,
+      "fade": null,
+      "curve": null,
+      "fx": null,
+      "wipeDir": null,
+      "wipeSoft": null
+    }
+  ]
+}
