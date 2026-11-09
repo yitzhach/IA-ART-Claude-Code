@@ -11,6 +11,10 @@
   X-Frame-Options: DENY
   Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://formspree.io https://cloudflareinsights.com; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'self'; object-src 'none'
 
+# Preview addresses (anything on workers.dev) stay out of search results. The real domain is unaffected.
+https://:worker.:account.workers.dev/*
+  X-Robots-Tag: noindex
+
 # The web editor loads from unpkg and talks to GitHub, so it gets its own policy.
 /admin/*
   ! Content-Security-Policy
