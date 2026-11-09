@@ -112,6 +112,14 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   the work page. Names come from a generated `/transitions.css` (inline styles are blocked by the CSP); checked for
   duplicate names on every page; off for reduced-motion users; other browsers navigate normally.
 
+- **Build checks** (`tests/build.spec.ts`): no inline scripts/styles (CSP-safe), unique transition names, no broken
+  internal links. Refactor: structured data → `src/lib/structured-data.ts`, print styles → `src/styles/spec-sheet.css`.
+  41 tests pass.
+
+### Next (for the 6:25 window)
+- Fresh end-to-end pass (desktop + phone) over every page; fix anything that looks off.
+- Refresh the morning summary below and the tour so they match the final state.
+
 ### Note — new upload on `main`
 Isaac uploaded three images to `main` overnight (`images/library/8-jbpg-3000.webp`, `final-6003512.webp`,
 `img-6658.webp`). All three were already recovered from the Claude Design project and handled on `v2`: `img-6658`
