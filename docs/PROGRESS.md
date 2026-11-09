@@ -69,7 +69,11 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched
 and still matches the live site. Nothing has been deployed.
 
-**See it.** `npm install && npm run dev`, then open http://localhost:4321 — or deploy a private preview
+**See it without installing anything:** the visual tour at https://claude.ai/artifact/X4aVmg3vS3rNiop8ibPZVP
+(private to you) — screenshots of every page and feature on desktop and phone, before/after numbers, and the list
+of what's needed from you.
+
+**Run it.** `npm install && npm run dev`, then open http://localhost:4321 — or deploy a private preview
 (README › Deploying, step 1); the live site isn't affected until you move the domain.
 
 **What only you can supply** — `docs/CONTENT-NEEDED.md` lists it: titles, sizes and years for most works,
