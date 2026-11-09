@@ -16,6 +16,7 @@ const { key, works } = Astro.props as { key: CollectionKey; works: Awaited<Retur
 const info = collectionInfo[key];
 const others = (Object.keys(collectionInfo) as CollectionKey[]).filter((k) => k !== key);
 const cover = works[0]?.data.images[0];
+const availableHere = works.filter((w) => w.data.status === 'available').length;
 ---
 
 <Base title={`${info.name} collection`} description={`${info.blurb} ${works.length} works by Isaac Anderson.`} shareImage={cover}>
@@ -24,7 +25,15 @@ const cover = works[0]?.data.images[0];
     <h1 class="display">{info.name}</h1>
     <div class="row">
       <p class="lede">{info.blurb}</p>
-      <p class="mono count">{works.length} works</p>
+      <p class="mono count">
+        {works.length} works
+        {availableHere > 0 && (
+          <>
+            {' · '}
+            <a class="link" href={`/works/?collection=${key}&status=available`}>{availableHere} available</a>
+          </>
+        )}
+      </p>
     </div>
   </section>
 

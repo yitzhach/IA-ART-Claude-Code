@@ -5,6 +5,7 @@ import WorkGrid from '~/components/WorkGrid.astro';
 import InquiryForm from '~/components/InquiryForm.astro';
 import { site, collectionInfo, type CollectionKey } from '~/lib/site';
 import { getWorks, inCollection, altText } from '~/lib/works';
+import { getShows, showDates } from '~/lib/shows';
 import hero from '~/assets/site/hero-macro.webp';
 import lobby from '~/assets/site/object-014.webp';
 import dining from '~/assets/site/insitu-collection.webp';
@@ -22,6 +23,7 @@ const featured = (() => {
     .slice(0, 8);
 })();
 const availableCount = works.filter((w) => w.data.status === 'available').length;
+const nextShow = (await getShows()).upcoming[0];
 const collections = (Object.keys(collectionInfo) as CollectionKey[]).map((key) => {
   const items = inCollection(works, key);
   return { key, ...collectionInfo[key], count: items.length, cover: items[0] };
@@ -56,6 +58,13 @@ const jsonLd = {
           <a class="btn btn--ghost" href="/commissions/">Commission a piece</a>
         </div>
       </div>
+      {
+        nextShow && (
+          <p class="next-show mono">
+            <span class="eyebrow">Next show</span> {showDates(nextShow)} · {nextShow.data.name}, {nextShow.data.city}
+          </p>
+        )
+      }
     </div>
     <figure class="hero-media wrap">
       <ArtImage src={hero} alt="A wide horizon painting in plaster and cement hung above a rustic bench beside an olive tree" sizes="(min-width: 1400px) 1312px, 100vw" priority />
@@ -175,6 +184,15 @@ const jsonLd = {
   }
   .hero-media {
     margin-top: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+  .next-show {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.9rem;
+    align-items: baseline;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
   }
   .hero-media :global(img) {
     width: 100%;

@@ -2,9 +2,12 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type Show = CollectionEntry<'shows'>;
 
+let all: Promise<Show[]> | undefined;
+
 /** Shows split into upcoming (soonest first) and past (latest first), as of the build. */
 export async function getShows(now = new Date()): Promise<{ upcoming: Show[]; past: Show[] }> {
-  const shows = await getCollection('shows');
+  // Loaded once per build (Astro warns each time an empty collection is read).
+  const shows = await (all ??= getCollection('shows'));
   const lastDay = (s: Show) => s.data.end ?? s.data.start;
   const today = new Date(now.toISOString().slice(0, 10));
   return {
