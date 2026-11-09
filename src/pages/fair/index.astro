@@ -1,0 +1,128 @@
+---
+/**
+ * Landing page for people who met Isaac at an art fair or show — the booth QR code points here.
+ * Thumb-friendly: available works first, save favourites, reach the studio in one tap.
+ */
+import Base from '~/layouts/Base.astro';
+import ArtImage from '~/components/ArtImage.astro';
+import WorkGrid from '~/components/WorkGrid.astro';
+import InquiryForm from '~/components/InquiryForm.astro';
+import { site } from '~/lib/site';
+import { getWorks } from '~/lib/works';
+import booth from '~/assets/site/show-booth.webp';
+
+const works = await getWorks();
+const available = works.filter((w) => w.data.status === 'available');
+const sms = site.phone.href.replace('tel:', 'sms:');
+---
+
+<Base
+  title="Good to meet you"
+  description="Met Isaac Anderson at a show? See available works, save your favourites, and reach the studio in one tap."
+  shareImage={booth}
+>
+  <section class="wrap hello">
+    <p class="eyebrow">At the show</p>
+    <h1 class="title">Good to meet you.</h1>
+    <p class="lede">
+      Everything from the booth, in your pocket — what’s available, what it costs, and how to bring a piece home or
+      commission one for your space.
+    </p>
+    <ul class="quick" role="list">
+      <li><a class="btn btn--primary" href="#available">See what’s available</a></li>
+      <li><a class="btn btn--ghost" href={sms}>Text the studio</a></li>
+      <li><a class="btn btn--ghost" href={site.phone.href}>Call {site.phone.display}</a></li>
+      <li><a class="btn btn--ghost" href={site.instagram.href} rel="noopener">Follow {site.instagram.handle}</a></li>
+    </ul>
+  </section>
+
+  <figure class="wrap booth">
+    <ArtImage src={booth} alt="Isaac Anderson's booth at an outdoor art show, panels hung on white walls" sizes="(min-width: 1400px) 1312px, 100vw" priority />
+  </figure>
+
+  <section class="section wrap" id="available" aria-labelledby="avail-h">
+    <header class="head">
+      <div>
+        <p class="eyebrow">Available now</p>
+        <h2 class="title" id="avail-h">{available.length > 0 ? `${available.length} works ready to go home` : 'New work is coming'}</h2>
+      </div>
+      <p class="tip">
+        Tip: tap a piece, then <strong>Add to inquiry list</strong> — send your favourites together when you’re home, or
+        use <strong>View on your wall</strong> to see one at true size.
+      </p>
+    </header>
+    {available.length > 0 && <WorkGrid works={available} />}
+    <div class="more">
+      <a class="link" href="/works/">The full catalogue →</a>
+      <a class="link" href="/commissions/">How commissions work →</a>
+    </div>
+  </section>
+
+  <section class="wrap section--tight">
+    <InquiryForm
+      source="Art fair page"
+      heading="Keep in touch"
+      intro="Leave your details and what caught your eye — the studio will follow up within two working days. Designers and trade welcome."
+    />
+  </section>
+</Base>
+
+<style>
+  .hello {
+    padding-block: clamp(2rem, 1rem + 4vw, 4.5rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .hello .title {
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+  .quick {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .booth :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.5rem 3rem;
+    margin-bottom: 2.5rem;
+  }
+  .head .title {
+    margin-top: 0.5rem;
+  }
+  .tip {
+    max-width: 26rem;
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+  .more {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2.5rem;
+    margin-top: 3rem;
+  }
+  .section--tight {
+    padding-bottom: var(--section);
+  }
+  @media (max-width: 559px) {
+    .quick li {
+      flex: 1 1 100%;
+    }
+    .quick .btn {
+      width: 100%;
+    }
+    .booth :global(img) {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

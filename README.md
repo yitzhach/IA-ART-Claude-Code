@@ -73,6 +73,12 @@ Each visitor is limited to about 12 questions a minute.
 **View on your wall** appears on every work that has a width and height. It shows the piece at true
 size in a sample room, or on a photo of the visitor's own wall; the photo never leaves their device.
 
+## At art fairs
+
+`/fair/` is a phone-first page for people who met you at a show: available works, one-tap text/call/Instagram,
+and a keep-in-touch form tagged "Art fair page". Print the booth card with its QR code from
+**isaacandersonart.com/fair/print/** (not linked anywhere, hidden from search).
+
 ## Running it locally
 
 Needs Node 20 or newer.
