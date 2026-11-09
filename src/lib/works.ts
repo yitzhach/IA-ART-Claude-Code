@@ -55,6 +55,8 @@ export function priceLabel(w: Work): string {
   if (w.data.status === 'reserved') return 'Reserved';
   if (w.data.status === 'commission') return 'Private commission';
   if (w.data.price) return `$${w.data.price.toLocaleString('en-US')}`;
+  // Status not yet confirmed by Isaac: don't imply the piece is for sale.
+  if (w.data.status === 'inquire') return 'Availability on request';
   return 'Price on request';
 }
 

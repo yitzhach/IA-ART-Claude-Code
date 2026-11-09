@@ -73,6 +73,13 @@ project is the artifact "5pm-8-18-NEW--ART-HOMEPAGE" (claude.ai/artifact/CZSKb33
   duplicate (`untitled-abstract-04` / `untitled-sculptural-09`) for Isaac.
 - 30 tests pass.
 
+### 2026-11-09 02:12–02:20 ET — session 2 (continued)
+- **Lighthouse (mobile)**, served compressed like Cloudflare: Accessibility 100, Best Practices 100, SEO 100 on every
+  page tested; Performance 100 on Works, 79–88 on image-led pages under the slow-4G simulation (first paint 0.9 s).
+- Image delivery: 240/320/800px renditions, tighter card `sizes`, per-work `sizes` on artwork pages. AVIF measured
+  and rejected (larger than WebP on these textured surfaces, 20× slower to build).
+- Works whose status Isaac hasn't confirmed now say "Availability on request" instead of implying they're for sale.
+
 ## Morning summary for Isaac
 
 **Where things stand.** The new site is on the `v2` branch of this repo, complete and working. `main` is untouched
